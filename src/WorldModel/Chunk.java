@@ -12,31 +12,50 @@ public class Chunk extends JPanel {
     private boolean containsPlayer = false;
 
     private List<List<Point>> chunkPoints = new ArrayList<>();
-    private Point chunkLocation;
+    private Point chunkIndex;
+    private Point chunkPixelLocation;
 
     public Chunk(int x, int y) {
-        this.chunkLocation = new Point(x, y);
+        this.chunkIndex = new Point(x, y);
         this.blockWidth = 64;
         this.blockHeight = 64;
         this.setLayout(null);
-        this.setBounds(x, y, Game.width, Game.height);
+        placeChunk();
         this.makeBackground();
         this.createPoints();
 
     }
 
-    public Point getChunkLocation() {
-        return this.chunkLocation;
+    private void placeChunk() {
+        int x = (this.chunkIndex.getX() > 0) ? Game.width : (this.chunkIndex.getX() < 0) ? -Game.width : 0;
+        int y = (this.chunkIndex.getY() > 0) ? Game.height : (this.chunkIndex.getY() < 0) ? -Game.height : 0;
+        this.chunkPixelLocation = new Point(x, y);
+
+        this.setBounds(x, y, Game.width, Game.height);
+    }
+
+    public void moveChunk(int x, int y) {
+        Point newPos = new Point((int)this.chunkPixelLocation.getX() + x, (int) this.chunkPixelLocation.getY() + y);
+        this.setLocation(newPos);
+        this.chunkPixelLocation = newPos;
+    }
+
+    public Point getChunkIndex() {
+        return this.chunkIndex;
+    }
+
+    public Point getChunkPixelLocation() {
+        return this.chunkPixelLocation;
     }
 
     public void makeBackground() {
-        int numBlocksX = 30; //Game.width / this.blockWidth;
+        int numBlocksX = 30; // Game.width / this.blockWidth;
         int numBlocksY = 16; // Game.height / this.blockHeight;
-
 
         for (int y = 0; y < numBlocksY; y++) {
             for (int x = 0; x < numBlocksX; x++) {
-                JLabel block = new JLabel(new ImageIcon(getClass().getResource("/images/GrassBlockLargeRatio.png")));
+                JLabel block = new JLabel(
+                        new ImageIcon(getClass().getResource("/GameResources/Images/GrassBlock1.png")));
                 block.setBounds(x * blockWidth, y * blockHeight, blockWidth, blockHeight);
                 this.add(block);
             }
@@ -57,8 +76,8 @@ public class Chunk extends JPanel {
     }
 
     public void createPoints() {
-        int startY = (int) getChunkLocation().getY();
-        int startX = (int) getChunkLocation().getX();
+        int startY = (int) getChunkIndex().getY();
+        int startX = (int) getChunkIndex().getX();
 
         for (int i = 0; i < 16; i++) {
             List<Point> row = new ArrayList<>();
@@ -72,6 +91,10 @@ public class Chunk extends JPanel {
     @Override
     public String toString() {
         return "Chunk @ Point: " + getLocation().toString() + " Contains Player: " + this.containsPlayer;
+    }
+
+    public List<List<Point>> getChunkPoints() {
+        return this.chunkPoints;
     }
 
 }

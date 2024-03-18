@@ -19,10 +19,10 @@ public class Zombie extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        URL dudeLocation = getClass().getResource("/images/ZombieCharacter.png");
+        URL dudeLocation = getClass().getResource("/GameResources/Images/ZombieCharacter.png");
         try {
             BufferedImage dude = ImageIO.read(dudeLocation);
-            g.drawImage((Image) dude, (int)position.getX(), (int) position.getY(), this);
+            g.drawImage((Image) dude, (int) position.getX(), (int) position.getY(), this);
         } catch (IOException e) {
             e.printStackTrace();
         }

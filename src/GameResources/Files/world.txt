@@ -1,0 +1,13 @@
+# This will be the demo world to create a small 3x3 (chunk) world
+# Entities:
+main 0, 0
+# Chunks:
+c 0 0 i
+c 30 0
+c 30 -16
+c 30 16
+c -30 0
+c -30 -16
+c -30 16
+c 0 -16
+c 0 16

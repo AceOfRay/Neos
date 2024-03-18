@@ -13,7 +13,7 @@ public class ChunkLoader {
 
     public ChunkLoader() {
         try {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Files/world.txt");
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("GameResources/Files/world.txt");
             if (inputStream != null) {
                 loadChunksFromInputStream(inputStream);
             } else {
@@ -32,7 +32,7 @@ public class ChunkLoader {
                     if (line.startsWith("c")) {
                         String[] pieces = line.split(" ");
                         Chunk curChunk = new Chunk(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]));
-                        chunks.add(curChunk);
+                        this.chunks.add(curChunk);
                         if (pieces.length > 3 && pieces[3] != null) {
                             curChunk.setContainsPlayer();
                         }
@@ -47,10 +47,10 @@ public class ChunkLoader {
         Comparator<Chunk> chunkYComparator = Comparator.comparingDouble(chunk -> chunk.getLocation().getY());
         Comparator<Chunk> chunkXComparator = Comparator.comparingDouble(chunk -> chunk.getLocation().getX());
         Comparator<Chunk> chunkComparatorFinal = chunkYComparator.thenComparing(chunkXComparator);
-        Collections.sort(chunks, chunkComparatorFinal);
+        Collections.sort(this.chunks, chunkComparatorFinal);
     }
 
     public List<Chunk> getChunks() {
-        return chunks;
+        return this.chunks;
     }
 }

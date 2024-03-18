@@ -16,7 +16,6 @@ public class Game extends JFrame implements KeyListener {
     private List<Zombie> worldEntities = new ArrayList<>();
     private Zombie dude;
     private JLayeredPane pane;
-    private Chunk bg;
     private boolean isActive;
     private HashSet<Direction> directionSet;
     private ImmediateWorld immediateWorld;
@@ -49,16 +48,7 @@ public class Game extends JFrame implements KeyListener {
 
     public void setImmediateWorld() {
         this.immediateWorld = new ImmediateWorld();
-
-
-        // ChunkLoader loader = new ChunkLoader();
-        // this.immediateWorld = loader.getChunks();
-        // Chunk chunkWithPlayer = this.immediateWorld.get(4);
-        // for (Chunk curChunk : this.immediateWorld) {
-        //     this.pane.add(curChunk, JLayeredPane.DEFAULT_LAYER);
-        //     System.out.println(curChunk);
-        // }
-        // this.bg = chunkWithPlayer;
+        this.immediateWorld.addWorldToPane(this.pane);
     }
 
     public void setEntities() {
@@ -73,22 +63,20 @@ public class Game extends JFrame implements KeyListener {
         boolean right = directionSet.contains(Direction.Right);
         boolean down = directionSet.contains(Direction.Down);
         boolean left = directionSet.contains(Direction.Left);
-        Point bgPos = bg.getLocation();
 
         int dx = 0;
         int dy = 0;
 
         if (up)
-            dy += 10;
+            dy += 30;
         if (down)
-            dy -= 10;
+            dy -= 30;
         if (left)
-            dx += 10;
+            dx += 30;
         if (right)
-            dx -= 10;
+            dx -= 30;
 
-        bg.setLocation((int) bgPos.getX() + dx, (int) bgPos.getY() + dy);
-
+        this.immediateWorld.move(dx, dy);
         this.repaint();
     }
 
@@ -152,7 +140,8 @@ public class Game extends JFrame implements KeyListener {
     }
 
     public void initializeGame() {
-        this.isActive = true;;
+        this.isActive = true;
+        ;
         this.setTitle("Grass World");
         this.addKeyListener(this);
         this.setFocusable(true);
@@ -162,6 +151,10 @@ public class Game extends JFrame implements KeyListener {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    public JLayeredPane getPane() {
+        return this.pane;
     }
 
 }
