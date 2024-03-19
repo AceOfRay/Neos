@@ -75,6 +75,20 @@ public class Chunk extends JPanel {
         return this.containsPlayer;
     }
 
+    public Chunk containsPlayer(Point playerPos) { // can optimize using maxes and mins
+        for (List<Point> row : chunkPoints) {
+            for (Point col : row) {
+                if (col.equals(playerPos)) {
+                    this.containsPlayer = true;
+                    return this;
+                }
+            }
+        }
+        this.containsPlayer = false;
+        return null;
+    
+    }
+
     public void createPoints() {
         int startY = (int) getChunkIndex().getY();
         int startX = (int) getChunkIndex().getX();

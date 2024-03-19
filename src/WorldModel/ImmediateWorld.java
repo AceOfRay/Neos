@@ -5,12 +5,16 @@ import java.util.List;
 
 import javax.swing.JLayeredPane;
 
+import Entities.Zombie;
+
 public class ImmediateWorld {
     private ChunkLoader loader = new ChunkLoader();
     private List<Chunk> immediateWorld;
     private Chunk chunkWithPlayer;
+    private Zombie character;
 
-    public ImmediateWorld() {
+    public ImmediateWorld(Zombie character) {
+        this.character = character;
         this.immediateWorld = loader.getChunks();
         setChunkWithPlayer();
     }
@@ -28,6 +32,14 @@ public class ImmediateWorld {
     }
 
     public boolean checkPlayerMigration() {
+        for (Chunk curChunk : getImmediateWorld()) {
+            Chunk chunkWithPlayer = curChunk.containsPlayer(character.getPosition());
+            if (chunkWithPlayer != null) {
+                this.chunkWithPlayer.removeContainsPlayer();
+                this.chunkWithPlayer = chunkWithPlayer;
+                return true;
+            }
+        }
         return false;
     }
 

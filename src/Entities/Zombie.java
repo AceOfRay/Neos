@@ -8,11 +8,12 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import WorldModel.Game;
+
 public class Zombie extends JPanel {
     private Point position;
 
-    public Zombie(int posX, int posY) {
-        this.position = new Point(posX, posY);
+    public Zombie() {
         setBounds(0, 0, 1920, 1080);
         setOpaque(false);
     }
@@ -22,7 +23,7 @@ public class Zombie extends JPanel {
         URL dudeLocation = getClass().getResource("/GameResources/Images/ZombieCharacter.png");
         try {
             BufferedImage dude = ImageIO.read(dudeLocation);
-            g.drawImage((Image) dude, (int) position.getX(), (int) position.getY(), this);
+            g.drawImage((Image) dude, Game.width / 2, Game.height / 2, this);
         } catch (IOException e) {
             e.printStackTrace();
         }

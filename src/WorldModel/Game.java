@@ -14,7 +14,7 @@ public class Game extends JFrame implements KeyListener {
     public static final int width = 1920;
     public static final int height = 1024;
     private List<Zombie> worldEntities = new ArrayList<>();
-    private Zombie dude;
+    private Zombie character;
     private JLayeredPane pane;
     private boolean isActive;
     private HashSet<Direction> directionSet;
@@ -24,7 +24,7 @@ public class Game extends JFrame implements KeyListener {
         this.directionSet = new HashSet<>();
         initializeGame();
         while (isActive) {
-            move();
+            checkMove();
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -35,7 +35,7 @@ public class Game extends JFrame implements KeyListener {
 
     public void setup() {
         // might read a file here to get the entities in worldEntites but for now
-        worldEntities.add(new Zombie(width / 2, height / 2));
+        worldEntities.add(new Zombie());
         this.createPaneAndEntities();
     }
 
@@ -47,18 +47,18 @@ public class Game extends JFrame implements KeyListener {
     }
 
     public void setImmediateWorld() {
-        this.immediateWorld = new ImmediateWorld();
+        this.immediateWorld = new ImmediateWorld(character);
         this.immediateWorld.addWorldToPane(this.pane);
     }
 
     public void setEntities() {
         for (Zombie zombie : worldEntities) {
             this.pane.add(zombie, JLayeredPane.PALETTE_LAYER);
-            this.dude = zombie;
+            this.character = zombie;
         }
     }
 
-    public void move() {
+    public void checkMove() {
         boolean up = directionSet.contains(Direction.Up);
         boolean right = directionSet.contains(Direction.Right);
         boolean down = directionSet.contains(Direction.Down);
@@ -68,18 +68,20 @@ public class Game extends JFrame implements KeyListener {
         int dy = 0;
 
         if (up)
-            dy += 30;
+            dy += 15;
         if (down)
-            dy -= 30;
+            dy -= 15;
         if (left)
-            dx += 30;
+            dx += 15;
         if (right)
-            dx -= 30;
+            dx -= 15;
 
         this.immediateWorld.move(dx, dy);
-        this.repaint();
+        if (this.immediateWorld.checkPlayerMigration()) { // if the player migrated to another chunk (inside this function unset the old chunkWithPlayer and set it to the new one)
+            this.immediateWorld.playerMigrated(); // recreate world
+        }
+            this.repaint();
     }
-
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -152,7 +154,7 @@ public class Game extends JFrame implements KeyListener {
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
+
     public JLayeredPane getPane() {
         return this.pane;
     }
