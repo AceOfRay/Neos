@@ -3,18 +3,17 @@ package WorldModel;
 import javax.swing.*;
 import Entities.Zombie;
 import Tools.Direction;
+import Tools.EntityLoader;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class Game extends JFrame implements KeyListener {
     public static final int width = 1920;
     public static final int height = 1024;
-    private List<Zombie> worldEntities = new ArrayList<>();
-    private Zombie character;
+    private List<Zombie> worldEntities;
     private JLayeredPane pane;
     private boolean isActive;
     private HashSet<Direction> directionSet;
@@ -24,37 +23,28 @@ public class Game extends JFrame implements KeyListener {
         this.directionSet = new HashSet<>();
         initializeGame();
         while (isActive) {
-            checkMove();
+
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
                 break;
             }
+            checkMove();
+            updatePlayer();
         }
     }
 
-    public void setup() {
-        // might read a file here to get the entities in worldEntites but for now
-        worldEntities.add(new Zombie());
-        this.createPaneAndEntities();
-    }
-
-    public void createPaneAndEntities() {
-        this.pane = new JLayeredPane();
-        this.add(pane);
-        this.setImmediateWorld();
-        this.setEntities();
-    }
-
-    public void setImmediateWorld() {
-        this.immediateWorld = new ImmediateWorld(character);
-        this.immediateWorld.addWorldToPane(this.pane);
+    public void updatePlayer() {
+        if (immediateWorld.checkPlayerMigration()) {
+            immediateWorld.handlePlayerMigration(); // recreate world
+        }
     }
 
     public void setEntities() {
-        for (Zombie zombie : worldEntities) {
+        EntityLoader loader = new EntityLoader(immediateWorld);
+        this.worldEntities = immediateWorld.getEntities();
+        for (Zombie zombie : worldEntities) {            
             this.pane.add(zombie, JLayeredPane.PALETTE_LAYER);
-            this.character = zombie;
         }
     }
 
@@ -66,21 +56,48 @@ public class Game extends JFrame implements KeyListener {
 
         int dx = 0;
         int dy = 0;
+        double pdx = 0;
+        double pdy = 0;
 
-        if (up)
-            dy += 15;
-        if (down)
-            dy -= 15;
-        if (left)
-            dx += 15;
-        if (right)
-            dx -= 15;
-
-        this.immediateWorld.move(dx, dy);
-        if (this.immediateWorld.checkPlayerMigration()) { // if the player migrated to another chunk (inside this function unset the old chunkWithPlayer and set it to the new one)
-            this.immediateWorld.playerMigrated(); // recreate world
+        if (up) {
+            dy += 16;
+            pdy -= .25;
         }
-            this.repaint();
+
+        if (down) {
+            dy -= 16;
+            pdy += .25;
+        }
+        if (left) {
+            dx += 16;
+            pdx -= 0.25;
+        }
+        if (right) {
+            dx -= 16;
+            pdx += .25;
+        }
+
+        this.immediateWorld.moveWorld(dx, dy);
+        this.immediateWorld.moveCharacter(pdx, pdy);
+
+        this.repaint();
+    }
+
+    public void setup() {
+        // might read a file here to get the entities in worldEntites but for now
+        this.createPaneAndEntities();
+    }
+
+    public void createPaneAndEntities() {
+        this.pane = new JLayeredPane();
+        this.add(pane);
+        this.setImmediateWorld();
+        this.setEntities();
+    }
+
+    public void setImmediateWorld() {
+        this.immediateWorld = new ImmediateWorld();
+        this.immediateWorld.addWorldToPane(this.pane);
     }
 
     @Override

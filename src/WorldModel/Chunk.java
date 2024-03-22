@@ -40,14 +40,6 @@ public class Chunk extends JPanel {
         this.chunkPixelLocation = newPos;
     }
 
-    public Point getChunkIndex() {
-        return this.chunkIndex;
-    }
-
-    public Point getChunkPixelLocation() {
-        return this.chunkPixelLocation;
-    }
-
     public void makeBackground() {
         int numBlocksX = 30; // Game.width / this.blockWidth;
         int numBlocksY = 16; // Game.height / this.blockHeight;
@@ -63,30 +55,24 @@ public class Chunk extends JPanel {
 
     }
 
-    public void setContainsPlayer() {
-        this.containsPlayer = true;
-    }
-
-    public void removeContainsPlayer() {
-        this.containsPlayer = false;
-    }
-
-    public boolean getContainsPlayer() {
-        return this.containsPlayer;
-    }
-
-    public Chunk containsPlayer(Point playerPos) { // can optimize using maxes and mins
-        for (List<Point> row : chunkPoints) {
-            for (Point col : row) {
-                if (col.equals(playerPos)) {
-                    this.containsPlayer = true;
-                    return this;
-                }
-            }
+    public Chunk containsPlayer(Point playerPos) {
+        double chunkX = getChunkIndex().getX();
+        double chunkY = getChunkIndex().getY();
+        double playerX = playerPos.getX();
+        double playerY = playerPos.getY();
+        if (chunkX > playerX || chunkY > playerY || playerX > chunkX + 30 || playerY > chunkY + 30) { // checks out of bounds
+            this.containsPlayer = false;
+            return null;
         }
-        this.containsPlayer = false;
-        return null;
+        return this;
+    }
     
+    public Point getChunkIndex() {
+        return this.chunkIndex;
+    }
+
+    public Point getChunkPixelLocation() {
+        return this.chunkPixelLocation;
     }
 
     public void createPoints() {
@@ -111,4 +97,15 @@ public class Chunk extends JPanel {
         return this.chunkPoints;
     }
 
+    public void setContainsPlayer() {
+        this.containsPlayer = true;
+    }
+
+    public void removeContainsPlayer() {
+        this.containsPlayer = false;
+    }
+
+    public boolean getContainsPlayer() {
+        return this.containsPlayer;
+    }
 }

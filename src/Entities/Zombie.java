@@ -9,13 +9,17 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import WorldModel.Game;
+import WorldModel.ImmediateWorld;
 
 public class Zombie extends JPanel {
-    private Point position;
+    private Point gamePosition;
+    private ImmediateWorld world;
 
-    public Zombie() {
+    public Zombie(double x, double y, ImmediateWorld world) {
         setBounds(0, 0, 1920, 1080);
         setOpaque(false);
+        this.gamePosition = new Point((int) x, (int) y);
+        
     }
 
     @Override
@@ -30,7 +34,21 @@ public class Zombie extends JPanel {
 
     }
 
-    public Point getPosition() {
-        return this.position;
+    public Point getGamePosition() {
+        return this.gamePosition;
+    }
+
+    public void moveX(double x) {
+        double newX = getGamePosition().getX() + (x > 0 ? 1 : -1);
+        this.gamePosition = new Point((int) newX, (int) getGamePosition().getY());
+    }
+
+    public void moveY(double y) {
+        double newY = getGamePosition().getY() + (y > 0 ? 1 : -1);
+        this.gamePosition = new Point((int) getGamePosition().getX(), (int) newY);
+    }
+
+    public void setImmediateWorld(ImmediateWorld world) {
+        this.world = world;
     }
 }
