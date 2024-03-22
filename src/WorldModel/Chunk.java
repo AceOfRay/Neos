@@ -66,6 +66,13 @@ public class Chunk extends JPanel {
         }
         return this;
     }
+
+    public boolean equals(Chunk other) {
+        if (other == null) {
+            return false;
+        }
+        return getChunkIndex().equals(other.getChunkIndex());
+    }
     
     public Point getChunkIndex() {
         return this.chunkIndex;

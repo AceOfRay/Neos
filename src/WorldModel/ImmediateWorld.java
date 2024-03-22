@@ -14,7 +14,7 @@ public class ImmediateWorld {
     private List<Chunk> immediateWorld;
     private Chunk chunkWithPlayer;
     private Zombie character;
-    private List<Zombie> entities= new ArrayList<>();
+    private List<Zombie> entities = new ArrayList<>();
     private double playerMoveCountX;
     private double playerMoveCountY;
 
@@ -24,38 +24,26 @@ public class ImmediateWorld {
     }
 
     public void handlePlayerMigration() {
-
-    }
+        // save state of old world
+        // create a new chunkLoader which will change which chunks are chosen
+        // 
+    }   
 
     public boolean checkPlayerMigration() {
         if (character != null) {
             for (Chunk curChunk : getImmediateWorld()) {
-                Chunk chunkWithPlayer = curChunk.containsPlayer(character.getGamePosition());
-                if (chunkWithPlayer != null) {
-                    this.chunkWithPlayer.removeContainsPlayer();
-                    this.chunkWithPlayer = chunkWithPlayer;
+                Chunk newChunkWithPlayer = curChunk.containsPlayer(character.getGamePosition());
+                if (newChunkWithPlayer != null && !chunkWithPlayer.equals(newChunkWithPlayer)) {
+                    updateChunkWithPlayer(newChunkWithPlayer);
                     return true;
                 }
             }
         }
         return false;
-        
+
     }
 
-    public void addWorldToPane(JLayeredPane pane) {
-        for (Chunk curChunk : this.immediateWorld) {
-            pane.add(curChunk, JLayeredPane.DEFAULT_LAYER);
-        }
-    }
-
-    public void moveWorld(int x, int y) {
-        for (Chunk curChunk : this.immediateWorld) {
-            curChunk.moveChunk(x, y);
-        }
-    }
-    
     public void moveCharacter(double dx, double dy) {
-        System.out.println(character.getGamePosition());
         playerMoveCountX += dx;
         playerMoveCountY -= dy;
         if (playerMoveCountX >= 1) {
@@ -71,12 +59,23 @@ public class ImmediateWorld {
             character.moveY(-1);
             playerMoveCountY = 0;
         }
-        /**
-         * if x pos move right
-         * if x neg move left
-         * if y pos move up
-         * if y neg move down
-         */
+    }
+
+    public void addWorldToPane(JLayeredPane pane) {
+        for (Chunk curChunk : this.immediateWorld) {
+            pane.add(curChunk, JLayeredPane.DEFAULT_LAYER);
+        }
+    }
+
+    public void moveWorld(int x, int y) {
+        for (Chunk curChunk : this.immediateWorld) {
+            curChunk.moveChunk(x, y);
+        }
+    }
+
+    public void updateChunkWithPlayer(Chunk newChunk) {
+        this.chunkWithPlayer.removeContainsPlayer();
+        this.chunkWithPlayer = newChunk;
     }
 
     public List<Zombie> getEntities() {
@@ -100,8 +99,8 @@ public class ImmediateWorld {
     }
 
     public Chunk findChunkWithPlayer() {
-        for (Chunk curChunk : this.immediateWorld) {
-            if (curChunk.getContainsPlayer()) {
+        for (Chunk curChunk : getImmediateWorld()) {
+            if (curChunk.getContainsPlayer()) {                
                 return curChunk;
             }
         }

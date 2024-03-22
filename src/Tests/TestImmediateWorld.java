@@ -6,8 +6,6 @@ import java.awt.Point;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-
-import Entities.Zombie;
 import WorldModel.Chunk;
 import WorldModel.ImmediateWorld;
 

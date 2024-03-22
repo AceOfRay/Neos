@@ -32,10 +32,11 @@ public class ChunkLoader {
                     if (line.startsWith("c")) {
                         String[] pieces = line.split(" ");
                         Chunk curChunk = new Chunk(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]));
-                        this.chunks.add(curChunk);
                         if (pieces.length > 3 && pieces[3] != null) {
+                            System.out.println("Setting chunk");
                             curChunk.setContainsPlayer();
                         }
+                        this.chunks.add(curChunk);
                     }
                 }
             }

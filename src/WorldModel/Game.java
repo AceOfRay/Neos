@@ -16,12 +16,12 @@ public class Game extends JFrame implements KeyListener {
     private List<Zombie> worldEntities;
     private JLayeredPane pane;
     private boolean isActive;
-    private HashSet<Direction> directionSet;
+    private HashSet<Direction> directionSet = new HashSet<>();
     private ImmediateWorld immediateWorld;
 
     public Game() {
-        this.directionSet = new HashSet<>();
         initializeGame();
+
         while (isActive) {
 
             try {
@@ -34,6 +34,23 @@ public class Game extends JFrame implements KeyListener {
         }
     }
 
+    public Game(int time) {
+        int endTime = time * 10;
+        initializeTestGame();
+
+        while (isActive && endTime > 0) {
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                break;
+            }
+            checkMove();
+            updatePlayer();
+            endTime--;
+        }
+
+    }
+
     public void updatePlayer() {
         if (immediateWorld.checkPlayerMigration()) {
             immediateWorld.handlePlayerMigration(); // recreate world
@@ -43,7 +60,7 @@ public class Game extends JFrame implements KeyListener {
     public void setEntities() {
         EntityLoader loader = new EntityLoader(immediateWorld);
         this.worldEntities = immediateWorld.getEntities();
-        for (Zombie zombie : worldEntities) {            
+        for (Zombie zombie : worldEntities) {
             this.pane.add(zombie, JLayeredPane.PALETTE_LAYER);
         }
     }
@@ -85,10 +102,6 @@ public class Game extends JFrame implements KeyListener {
 
     public void setup() {
         // might read a file here to get the entities in worldEntites but for now
-        this.createPaneAndEntities();
-    }
-
-    public void createPaneAndEntities() {
         this.pane = new JLayeredPane();
         this.add(pane);
         this.setImmediateWorld();
@@ -170,6 +183,12 @@ public class Game extends JFrame implements KeyListener {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public void initializeTestGame() {
+        this.isActive = true;
+        this.setSize(new Dimension(width, height));
+        this.setup();
     }
 
     public JLayeredPane getPane() {
