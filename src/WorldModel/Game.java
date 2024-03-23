@@ -48,12 +48,11 @@ public class Game extends JFrame implements KeyListener {
             updatePlayer();
             endTime--;
         }
-
     }
 
     public void updatePlayer() {
         if (immediateWorld.checkPlayerMigration()) {
-            immediateWorld.handlePlayerMigration(); // recreate world
+            //immediateWorld.handlePlayerMigration(); // recreate world
         }
     }
 

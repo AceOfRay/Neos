@@ -20,18 +20,14 @@ public class Chunk extends JPanel {
         this.blockWidth = 64;
         this.blockHeight = 64;
         this.setLayout(null);
-        placeChunk();
         this.makeBackground();
         this.createPoints();
 
     }
 
-    private void placeChunk() {
-        int x = (this.chunkIndex.getX() > 0) ? Game.width : (this.chunkIndex.getX() < 0) ? -Game.width : 0;
-        int y = (this.chunkIndex.getY() > 0) ? Game.height : (this.chunkIndex.getY() < 0) ? -Game.height : 0;
-        this.chunkPixelLocation = new Point(x, y);
-
-        this.setBounds(x, y, Game.width, Game.height);
+    public void placeChunk(int pxLoc, int pyLoc) {
+        this.chunkPixelLocation = new Point(pxLoc, pyLoc);
+        this.setBounds((int) chunkPixelLocation.getX(), (int) chunkPixelLocation.getY(), Game.width, Game.height);
     }
 
     public void moveChunk(int x, int y) {
@@ -60,7 +56,7 @@ public class Chunk extends JPanel {
         double chunkY = getChunkIndex().getY();
         double playerX = playerPos.getX();
         double playerY = playerPos.getY();
-        if (chunkX > playerX || chunkY > playerY || playerX > chunkX + 30 || playerY > chunkY + 30) { // checks out of bounds
+        if (chunkX > playerX || chunkY > playerY || playerX > (chunkX + 29) || playerY > (chunkY + 15)) { // checks out of bounds
             this.containsPlayer = false;
             return null;
         }
@@ -97,7 +93,8 @@ public class Chunk extends JPanel {
 
     @Override
     public String toString() {
-        return "Chunk @ Point: " + getLocation().toString() + " Contains Player: " + this.containsPlayer;
+        return "Chunk @ GamePoint: " + "[" + getChunkIndex().getX() + ", " + getChunkIndex().getY() + "]"
+                + " Contains Player: " + getContainsPlayer();
     }
 
     public List<List<Point>> getChunkPoints() {

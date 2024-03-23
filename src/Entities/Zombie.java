@@ -19,7 +19,7 @@ public class Zombie extends JPanel {
         setBounds(0, 0, 1920, 1080);
         setOpaque(false);
         this.gamePosition = new Point((int) x, (int) y);
-        
+        this.world = world;
     }
 
     @Override

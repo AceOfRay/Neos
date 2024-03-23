@@ -28,20 +28,33 @@ public class ChunkLoader {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (!line.startsWith("#") && !line.contains("Entities:") && !line.contains("Chunks:")) {
-                    if (line.startsWith("c")) {
-                        String[] pieces = line.split(" ");
-                        Chunk curChunk = new Chunk(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]));
-                        if (pieces.length > 3 && pieces[3] != null) {
-                            System.out.println("Setting chunk");
-                            curChunk.setContainsPlayer();
+                if (!line.startsWith("#") && !line.contains("Chunks:")) {
+                    String[] pieces = line.split(" ");
+                    Chunk curChunk;
+                    switch (pieces[0]) {
+                        case "np": {
+                            curChunk = new Chunk(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]));
+                            break;
                         }
+                        case "hp": {
+                            curChunk = new Chunk(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]));
+                            curChunk.setContainsPlayer();
+                            break;
+                        }
+                        default: {
+                            curChunk = null;
+                            break;
+                        }
+                    }
+                    if (curChunk != null) {
+                        curChunk.placeChunk(Integer.parseInt(pieces[3]), Integer.parseInt(pieces[4]));
                         this.chunks.add(curChunk);
                     }
                 }
             }
+            sortChunks();
         }
-        sortChunks();
+
     }
 
     private void sortChunks() {

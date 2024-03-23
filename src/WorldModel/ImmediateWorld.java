@@ -3,6 +3,7 @@ package WorldModel;
 import Tools.ChunkLoader;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JLayeredPane;
@@ -14,7 +15,7 @@ public class ImmediateWorld {
     private List<Chunk> immediateWorld;
     private Chunk chunkWithPlayer;
     private Zombie character;
-    private List<Zombie> entities = new ArrayList<>();
+    private List<Zombie> entities = new LinkedList<>();
     private double playerMoveCountX;
     private double playerMoveCountY;
 
@@ -24,10 +25,11 @@ public class ImmediateWorld {
     }
 
     public void handlePlayerMigration() {
+        List<String> newChunksIndices = determineNewChunkIndices();
         // save state of old world
         // create a new chunkLoader which will change which chunks are chosen
-        // 
-    }   
+        //
+    }
 
     public boolean checkPlayerMigration() {
         if (character != null) {
@@ -40,7 +42,25 @@ public class ImmediateWorld {
             }
         }
         return false;
+    }
 
+    public void updateChunkWithPlayer(Chunk newChunk) {
+        // System.out.println("updating Chunk With Player");
+        this.chunkWithPlayer.removeContainsPlayer();
+        this.chunkWithPlayer = newChunk;
+        newChunk.setContainsPlayer();
+    }
+
+    public void addWorldToPane(JLayeredPane pane) {
+        for (Chunk curChunk : this.immediateWorld) {
+            pane.add(curChunk, JLayeredPane.DEFAULT_LAYER);
+        }
+    }
+
+    public void moveWorld(int x, int y) {
+        for (Chunk curChunk : this.immediateWorld) {
+            curChunk.moveChunk(x, y);
+        }
     }
 
     public void moveCharacter(double dx, double dy) {
@@ -61,21 +81,58 @@ public class ImmediateWorld {
         }
     }
 
-    public void addWorldToPane(JLayeredPane pane) {
-        for (Chunk curChunk : this.immediateWorld) {
-            pane.add(curChunk, JLayeredPane.DEFAULT_LAYER);
+    public List<String> determineNewChunkIndices() {
+        List<String> newChunks = new ArrayList<>();
+        List<Chunk> oldWorld = getImmediateWorld();
+
+        int playerChunkIndex = -1;
+        for (int i = 0; i < oldWorld.size(); i++) {
+            if (oldWorld.get(i).getContainsPlayer()) {
+                playerChunkIndex = i;
+                break;
+            }
         }
+
+        if (playerChunkIndex != -1) {
+            switch (playerChunkIndex) {
+                case 1: // Top 6 chunks
+                    for (int i = 6; i <= 8; i++) {
+                        Chunk chunk = oldWorld.remove(6);
+                        newChunks.add(chunk.getChunkIndex().getX() + ", " + (chunk.getChunkIndex().getY() + 48));
+                    }
+                    break;
+                case 3: // Left 6 chunks
+                    for (int i = 2; i <= 4; i += 3) {
+                        Chunk chunk = oldWorld.remove(2);
+                        newChunks.add(chunk.getChunkIndex().getX() - 90 + ", " + chunk.getChunkIndex().getY());
+                    }
+                    break;
+                case 5: // Right 6 chunks
+                    for (int i = 0; i <= 2; i += 3) {
+                        Chunk chunk = oldWorld.remove(0);
+                        newChunks.add(chunk.getChunkIndex().getX() + 90 + ", " + chunk.getChunkIndex().getY());
+                    }
+                    break;
+                case 7: // Bottom 7 chunks
+                    for (int i = 0; i <= 2; i++) {
+                        Chunk chunk = oldWorld.remove(0);
+                        newChunks.add(chunk.getChunkIndex().getX() + ", " + (chunk.getChunkIndex().getY() - 48));
+                    }
+                    break;
+            }
+        }
+        for (Chunk cur : oldWorld) {
+            newChunks.add(cur.getChunkIndex().getX() + ", " + cur.getChunkIndex().getY());
+        }
+
+        return newChunks;
     }
 
-    public void moveWorld(int x, int y) {
-        for (Chunk curChunk : this.immediateWorld) {
-            curChunk.moveChunk(x, y);
-        }
-    }
-
-    public void updateChunkWithPlayer(Chunk newChunk) {
-        this.chunkWithPlayer.removeContainsPlayer();
-        this.chunkWithPlayer = newChunk;
+    public List<String> determineChunksToRender(List<Chunk> chunks) {
+        List<String> chunksToSave = chunks.stream()
+                .map(c -> c.getChunkIndex().getX() + ", " + c.getChunkIndex().getY())
+                .toList();
+        return List.of("x y");
     }
 
     public List<Zombie> getEntities() {
@@ -100,7 +157,7 @@ public class ImmediateWorld {
 
     public Chunk findChunkWithPlayer() {
         for (Chunk curChunk : getImmediateWorld()) {
-            if (curChunk.getContainsPlayer()) {                
+            if (curChunk.getContainsPlayer()) {
                 return curChunk;
             }
         }
