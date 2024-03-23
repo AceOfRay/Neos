@@ -167,4 +167,13 @@ public class ImmediateWorld {
     public void setChunkWithPlayer() {
         this.chunkWithPlayer = findChunkWithPlayer();
     }
+
+    public boolean contains(Chunk chunk) {
+        for (Chunk curChunk : immediateWorld) {
+            if (curChunk.equals(chunk)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

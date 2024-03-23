@@ -35,7 +35,6 @@ public class ChunkSaver {
 
                     boolean matches = curIndex.equals(centerPoint);
                     boolean inNewChunkList = indexes.contains(curIndex);
-                    System.out.println(line);
 
                     switch (pieces[0]) {
                         case "np": {

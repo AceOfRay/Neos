@@ -53,18 +53,26 @@ public class Game extends JFrame implements KeyListener {
     public void updatePlayer() {
         if (immediateWorld.checkPlayerMigration()) {
             immediateWorld.handlePlayerMigration(); // recreate world
-            clearPaneDefaultLayer();
-            this.immediateWorld.addWorldToPane(this.pane);
+            //removeOldChunks();
+            //addNewChunks();
         }
     }
 
-    public void clearPaneDefaultLayer() {
+    public void removeOldChunks() {
         Component[] components = this.pane.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER);
         for (Component component : components) {
-            this.pane.remove(component);
+            Chunk curChunk = (Chunk) component;
+            if (!this.immediateWorld.contains(curChunk)) {
+                this.pane.remove(component);
+            }
         }
         this.pane.revalidate();
         this.pane.repaint();
+    }
+
+    public void addNewChunks() {
+        Component[] components = this.pane.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER);
+        
     }
 
     public void setEntities() {
