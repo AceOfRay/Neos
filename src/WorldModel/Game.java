@@ -2,6 +2,7 @@ package WorldModel;
 
 import javax.swing.*;
 import Entities.Zombie;
+import Tools.ChunkLoader;
 import Tools.Direction;
 import Tools.EntityLoader;
 
@@ -10,7 +11,7 @@ import java.awt.event.*;
 import java.util.HashSet;
 import java.util.List;
 
-public class Game extends JFrame implements KeyListener {
+public class Game extends JFrame implements KeyListener, MouseListener {
     public static final int width = 1920;
     public static final int height = 1024;
     private List<Zombie> worldEntities;
@@ -18,6 +19,8 @@ public class Game extends JFrame implements KeyListener {
     private boolean isActive;
     private HashSet<Direction> directionSet = new HashSet<>();
     private ImmediateWorld immediateWorld;
+    private Zombie character;
+    private int frameTime = 2000;
 
     public Game() {
         initializeGame();
@@ -31,6 +34,7 @@ public class Game extends JFrame implements KeyListener {
             }
             checkMove();
             updatePlayer();
+            frameTime++;
         }
     }
 
@@ -52,10 +56,17 @@ public class Game extends JFrame implements KeyListener {
 
     public void updatePlayer() {
         if (immediateWorld.checkPlayerMigration()) {
-            immediateWorld.handlePlayerMigration(); // recreate world
+            // immediateWorld.handlePlayerMigration(); // recreate world
+            // clearPaneDefaultLayer();
+            // this.immediateWorld.addWorldToPane(this.pane);
             //removeOldChunks();
             //addNewChunks();
         }
+        if (frameTime >= 25) {
+            frameTime = 0;
+            this.character.updateFrame();
+        }
+        //updatePlayerFrame();
     }
 
     public void removeOldChunks() {
@@ -71,13 +82,27 @@ public class Game extends JFrame implements KeyListener {
     }
 
     public void addNewChunks() {
+        Component[] components = this.pane.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER); // only be 6
+        if (directionSet.contains(Direction.Up)) {
+
+        }
+
+
+    }
+
+    public void clearPaneDefaultLayer() {
         Component[] components = this.pane.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER);
-        
+        for (Component component : components) {
+            this.pane.remove(component);
+        }
+        this.pane.revalidate();
+        this.pane.repaint();
     }
 
     public void setEntities() {
         new EntityLoader(immediateWorld);
         this.worldEntities = immediateWorld.getEntities();
+        this.character = worldEntities.get(0);
         for (Zombie zombie : worldEntities) {
             this.pane.add(zombie, JLayeredPane.PALETTE_LAYER);
         }
@@ -95,19 +120,23 @@ public class Game extends JFrame implements KeyListener {
         double pdy = 0;
 
         if (up) {
+            character.facingDirection = Direction.Up;
             dy += 16;
             pdy -= .25;
         }
 
         if (down) {
+            character.facingDirection = Direction.Down;
             dy -= 16;
             pdy += .25;
         }
         if (left) {
+            character.facingDirection = Direction.Left;
             dx += 16;
             pdx -= 0.25;
         }
         if (right) {
+            character.facingDirection = Direction.Right;
             dx -= 16;
             pdx += .25;
         }
@@ -193,6 +222,7 @@ public class Game extends JFrame implements KeyListener {
         this.isActive = true;
         this.setTitle("Grass World");
         this.addKeyListener(this);
+        this.addMouseListener(this);
         this.setFocusable(true);
         this.setSize(new Dimension(width, height));
         this.setResizable(false);
@@ -210,6 +240,29 @@ public class Game extends JFrame implements KeyListener {
 
     public JLayeredPane getPane() {
         return this.pane;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int xpx = e.getX();
+        int ypx = e.getY();
+        System.out.println("Mouse clicked at: (" + xpx + ", " + ypx + ")");
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
 
 }

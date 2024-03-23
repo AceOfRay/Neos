@@ -54,11 +54,7 @@ public class ImmediateWorld {
         newChunk.setContainsPlayer();
     }
 
-    public void addWorldToPane(JLayeredPane pane) {
-        for (Chunk curChunk : this.immediateWorld) {
-            pane.add(curChunk, JLayeredPane.DEFAULT_LAYER);
-        }
-    }
+
 
     public void moveWorld(int x, int y) {
         for (Chunk curChunk : this.immediateWorld) {
@@ -84,13 +80,13 @@ public class ImmediateWorld {
         }
     }
 
-    public List<String> determineNewChunkIndices() {
+    public List<String> determineNewChunkIndices() { // probably these for loops that dont function properly
         List<String> newChunks = new ArrayList<>();
         List<Chunk> oldWorld = getImmediateWorld();
 
         int playerChunkIndex = -1;
         for (int i = 0; i < oldWorld.size(); i++) {
-            if (oldWorld.get(i).getContainsPlayer()) { 
+            if (oldWorld.get(i).getContainsPlayer()) {
                 playerChunkIndex = i;// may break here
                 break;
             }
@@ -129,6 +125,12 @@ public class ImmediateWorld {
         }
 
         return newChunks;
+    }
+
+    public void addWorldToPane(JLayeredPane pane) {
+        for (Chunk curChunk : this.immediateWorld) {
+            pane.add(curChunk, JLayeredPane.DEFAULT_LAYER);
+        }
     }
 
     public List<Zombie> getEntities() {
