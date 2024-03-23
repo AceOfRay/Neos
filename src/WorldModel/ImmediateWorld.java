@@ -1,6 +1,7 @@
 package WorldModel;
 
 import Tools.ChunkLoader;
+import Tools.ChunkSaver;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -26,6 +27,8 @@ public class ImmediateWorld {
 
     public void handlePlayerMigration() {
         List<String> newChunksIndices = determineNewChunkIndices();
+        new ChunkSaver(newChunksIndices, this);
+        this.immediateWorld = new ChunkLoader().getChunks();
         // save state of old world
         // create a new chunkLoader which will change which chunks are chosen
         //
@@ -87,8 +90,8 @@ public class ImmediateWorld {
 
         int playerChunkIndex = -1;
         for (int i = 0; i < oldWorld.size(); i++) {
-            if (oldWorld.get(i).getContainsPlayer()) {
-                playerChunkIndex = i;
+            if (oldWorld.get(i).getContainsPlayer()) { 
+                playerChunkIndex = i;// may break here
                 break;
             }
         }
@@ -128,13 +131,6 @@ public class ImmediateWorld {
         return newChunks;
     }
 
-    public List<String> determineChunksToRender(List<Chunk> chunks) {
-        List<String> chunksToSave = chunks.stream()
-                .map(c -> c.getChunkIndex().getX() + ", " + c.getChunkIndex().getY())
-                .toList();
-        return List.of("x y");
-    }
-
     public List<Zombie> getEntities() {
         return this.entities;
     }
@@ -162,6 +158,10 @@ public class ImmediateWorld {
             }
         }
         return null;
+    }
+
+    public Chunk getChunk(int index) {
+        return this.immediateWorld.get(index);
     }
 
     public void setChunkWithPlayer() {

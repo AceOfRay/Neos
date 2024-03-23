@@ -52,6 +52,7 @@ public class ChunkLoader {
                     }
                 }
             }
+            reader.close();
             sortChunks();
         }
 

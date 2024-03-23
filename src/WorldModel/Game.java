@@ -52,12 +52,23 @@ public class Game extends JFrame implements KeyListener {
 
     public void updatePlayer() {
         if (immediateWorld.checkPlayerMigration()) {
-            //immediateWorld.handlePlayerMigration(); // recreate world
+            immediateWorld.handlePlayerMigration(); // recreate world
+            clearPaneDefaultLayer();
+            this.immediateWorld.addWorldToPane(this.pane);
         }
     }
 
+    public void clearPaneDefaultLayer() {
+        Component[] components = this.pane.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER);
+        for (Component component : components) {
+            this.pane.remove(component);
+        }
+        this.pane.revalidate();
+        this.pane.repaint();
+    }
+
     public void setEntities() {
-        EntityLoader loader = new EntityLoader(immediateWorld);
+        new EntityLoader(immediateWorld);
         this.worldEntities = immediateWorld.getEntities();
         for (Zombie zombie : worldEntities) {
             this.pane.add(zombie, JLayeredPane.PALETTE_LAYER);
@@ -172,7 +183,6 @@ public class Game extends JFrame implements KeyListener {
 
     public void initializeGame() {
         this.isActive = true;
-        ;
         this.setTitle("Grass World");
         this.addKeyListener(this);
         this.setFocusable(true);
