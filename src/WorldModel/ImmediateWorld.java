@@ -1,8 +1,6 @@
 package WorldModel;
 
 import Tools.ChunkLoader;
-
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -27,10 +25,9 @@ public class ImmediateWorld extends JPanel {
         this.immediateWorld = loader.getChunks();
         this.setLayout(null);
         this.setBounds(-Game.width, -Game.height, Game.width * 3, Game.height * 3);
-        this.worldLocation = new Point(-1920, -1024);
+        this.worldLocation = new Point(-Game.width, -Game.height);
         putChunksInWorld();
         setChunkWithPlayer();
-
     }
 
     public boolean checkPlayerMigration() {
@@ -56,13 +53,14 @@ public class ImmediateWorld extends JPanel {
     public void move(int dx, int dy, double pdx, double pdy) {
         moveWorld(dx, dy);
         moveCharacter(pdx, pdy);
+        this.revalidate();
+        this.repaint();
     }
 
     public void moveWorld(int x, int y) {
         Point newPos = new Point((int) this.worldLocation.getX() + x, (int) this.worldLocation.getY() + y);
         this.setLocation(newPos);
         this.worldLocation = newPos;
-
     }
 
     public void moveCharacter(double dx, double dy) {
@@ -195,7 +193,9 @@ public class ImmediateWorld extends JPanel {
 
     public void putChunksInWorld() {
         for (Component chunk : this.immediateWorld) {
+            System.out.println(chunk.getLocation());
             this.add(chunk);
         }
+        
     }
 }

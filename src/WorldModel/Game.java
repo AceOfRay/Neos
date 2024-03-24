@@ -23,7 +23,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
 
     public Game() {
         initializeGame();
-
+        
         while (isActive) {
             try {
                 Thread.sleep(20);
@@ -33,6 +33,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
             checkMove();
             updatePlayer();
             frameTime++;
+            
         }
     }
 
@@ -120,16 +121,15 @@ public class Game extends JFrame implements KeyListener, MouseListener {
         this.pane = new JLayeredPane();
         this.pane.setOpaque(true);
         this.pane.setBackground(Color.black);
-        this.add(pane);
         this.setImmediateWorld();
         this.setEntities();
+        this.add(pane);
     }
-    
 
     public void setImmediateWorld() {
         this.immediateWorld = new ImmediateWorld();
-        this.pane.add((JPanel) this.immediateWorld, JLayeredPane.DEFAULT_LAYER);        
-        //this.immediateWorld.addWorldToPane(this.pane);
+        this.pane.add(this.immediateWorld, JLayeredPane.DEFAULT_LAYER);
+        // this.immediateWorld.addWorldToPane(this.pane);
     }
 
     @Override

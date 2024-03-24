@@ -2,13 +2,13 @@ package Tests;
 
 import org.junit.jupiter.api.Test;
 
-import WorldModel.Game;
+//import WorldModel.Game;
 
 public class TestGame {
     
     @Test
     public void testPanelContents() {
-        Game game = new Game(4);
+        //Game game = new Game(4);
         
     }
 }

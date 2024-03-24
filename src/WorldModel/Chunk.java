@@ -61,7 +61,6 @@ public class Chunk extends JPanel {
                 this.add(block);
             }
         }
-
     }
 
     public Chunk containsPlayer(Point playerPos) {
