@@ -3,6 +3,7 @@ package WorldModel;
 import Tools.ChunkLoader;
 import Tools.ChunkSaver;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,9 +27,9 @@ public class ImmediateWorld {
     }
 
     public void handlePlayerMigration() {
-        List<String> newChunksIndices = determineNewChunkIndices();
-        new ChunkSaver(newChunksIndices, this);
-        this.immediateWorld = new ChunkLoader().getChunks();
+        //List<String> newChunksIndices = determineNewChunkIndices();
+        //new ChunkSaver(newChunksIndices, this);
+        // this.immediateWorld = new ChunkLoader().getChunks();
         // save state of old world
         // create a new chunkLoader which will change which chunks are chosen
         //
@@ -54,17 +55,22 @@ public class ImmediateWorld {
         newChunk.setContainsPlayer();
     }
 
-
+    public void move(int dx, int dy, double pdx, double pdy) {
+        moveWorld(dx, dy);
+        moveCharacter(pdx, pdy);
+    }
 
     public void moveWorld(int x, int y) {
         for (Chunk curChunk : this.immediateWorld) {
             curChunk.moveChunk(x, y);
         }
+
     }
 
     public void moveCharacter(double dx, double dy) {
         playerMoveCountX += dx;
         playerMoveCountY -= dy;
+
         if (playerMoveCountX >= 1) {
             character.moveX(1);
             playerMoveCountX = 0;
@@ -78,6 +84,15 @@ public class ImmediateWorld {
             character.moveY(-1);
             playerMoveCountY = 0;
         }
+    }
+
+    public boolean pointWithinBounds(Point nextPos) {
+        int playerX = (int) nextPos.getX();
+        int playerY = (int) nextPos.getY();
+        if (playerX > 60 || playerX < -30 || playerY > 32 || playerY < -16) {
+            return false;
+        }
+        return true;
     }
 
     public List<String> determineNewChunkIndices() { // probably these for loops that dont function properly

@@ -18,6 +18,7 @@ public class Zombie extends JPanel {
     private int frameIndex = 0;
     private int frameMax = 2;
     public Direction facingDirection = Direction.Down;
+    public boolean isWalking;
 
     public Zombie(double x, double y, ImmediateWorld world) {
         setBounds(0, 0, 1920, 1080);
@@ -32,25 +33,9 @@ public class Zombie extends JPanel {
         if (frameIndex >= frameMax) {
             frameIndex = 0;
         }
-        URL frameLocation;
-        if (facingDirection.equals(Direction.Up)) {
-            frameLocation = getClass().getResource("/GameResources/Images/ZombieImages/UpStill" + frameIndex + ".png");
-        } else if (facingDirection.equals(Direction.Down)) {
-            frameLocation = getClass()
-                    .getResource("/GameResources/Images/ZombieImages/DownStill" + frameIndex + ".png");
-        } else if (facingDirection.equals(Direction.Right)) {
-            frameLocation = getClass()
-                    .getResource("/GameResources/Images/ZombieImages/RightStill" + frameIndex + ".png");
-        } else if (facingDirection.equals(Direction.Left)) {
-            frameLocation = getClass()
-                    .getResource("/GameResources/Images/ZombieImages/LeftStill" + frameIndex + ".png");
-        } else {
-            frameLocation = getClass()
-                    .getResource("/GameResources/Images/ZombieImages/DownStill" + frameIndex + ".png");
-        }
-
+        URL frame = getFrame();
         try {
-            BufferedImage dude = ImageIO.read(frameLocation);
+            BufferedImage dude = ImageIO.read(frame);
             g.drawImage((Image) dude, Game.width / 2, Game.height / 2, this);
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,12 +49,18 @@ public class Zombie extends JPanel {
 
     public void moveX(double x) {
         double newX = getGamePosition().getX() + (x > 0 ? 1 : -1);
-        this.gamePosition = new Point((int) newX, (int) getGamePosition().getY());
+        Point nextPos = new Point((int) newX, (int) getGamePosition().getY());
+        //if (world.pointWithinBounds(nextPos)) {
+            this.gamePosition = nextPos;
+        //}
     }
 
     public void moveY(double y) {
         double newY = getGamePosition().getY() + (y > 0 ? 1 : -1);
-        this.gamePosition = new Point((int) getGamePosition().getX(), (int) newY);
+        Point nextPos = new Point((int) getGamePosition().getX(), (int) newY);
+        if (world.pointWithinBounds(nextPos)) {
+            this.gamePosition = nextPos;
+        }
     }
 
     public void setImmediateWorld(ImmediateWorld world) {
@@ -78,5 +69,36 @@ public class Zombie extends JPanel {
 
     public void updateFrame() {
         this.frameIndex++;
+    }
+
+    public URL getFrame() {
+        boolean facingUp = facingDirection.equals(Direction.Up);
+        boolean facingDown = facingDirection.equals(Direction.Down);
+        boolean facingRight = facingDirection.equals(Direction.Right);
+        boolean facingLeft = facingDirection.equals(Direction.Left);
+
+        if (facingUp && isWalking) { //or is sprinting
+            return getClass().getResource("/GameResources/Images/ZombieImages/UpMoving" + frameIndex + ".png");
+        } else if (facingDown && isWalking) { //or is sprinting
+            return getClass().getResource("/GameResources/Images/ZombieImages/DownMoving" + frameIndex + ".png");
+        } else if (facingRight && isWalking) { //or is sprinting
+            return getClass().getResource("/GameResources/Images/ZombieImages/RightMoving" + frameIndex + ".png");
+        } else if (facingLeft && isWalking) { // or isSprinting
+            return getClass().getResource("/GameResources/Images/ZombieImages/LeftMoving" + frameIndex + ".png");
+        } else if (facingUp) {
+            return getClass().getResource("/GameResources/Images/ZombieImages/UpStill" + frameIndex + ".png");
+        } else if (facingDown) {
+            return getClass()
+                    .getResource("/GameResources/Images/ZombieImages/DownStill" + frameIndex + ".png");
+        } else if (facingRight) {
+            return getClass()
+                    .getResource("/GameResources/Images/ZombieImages/RightStill" + frameIndex + ".png");
+        } else if (facingLeft) {
+            return getClass()
+                    .getResource("/GameResources/Images/ZombieImages/LeftStill" + frameIndex + ".png");
+        } else {
+            return getClass()
+                    .getResource("/GameResources/Images/ZombieImages/DownStill" + frameIndex + ".png");
+        }
     }
 }

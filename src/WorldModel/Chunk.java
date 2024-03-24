@@ -3,6 +3,7 @@ package WorldModel;
 import javax.swing.*;
 import java.awt.Point;
 import java.util.List;
+import java.util.Random;
 import java.util.ArrayList;
 
 public class Chunk extends JPanel {
@@ -31,19 +32,32 @@ public class Chunk extends JPanel {
     }
 
     public void moveChunk(int x, int y) {
-        Point newPos = new Point((int)this.chunkPixelLocation.getX() + x, (int) this.chunkPixelLocation.getY() + y);
-        this.setLocation(newPos);
-        this.chunkPixelLocation = newPos;
+        Point newPos = new Point((int) this.chunkPixelLocation.getX() + x, (int) this.chunkPixelLocation.getY() + y);
+        //if (pixelWithinBounds(newPos)) {
+            this.setLocation(newPos);
+            this.chunkPixelLocation = newPos;
+        //}
+    }
+
+    public boolean pixelWithinBounds(Point px) {
+        double x = px.getX();
+        double y = px.getY();
+        if (x <= -3840 || x >= 1920 || y <= -1024 || y >= 2048) {
+            return false;
+        }
+        return true;
     }
 
     public void makeBackground() {
         int numBlocksX = 30; // Game.width / this.blockWidth;
         int numBlocksY = 16; // Game.height / this.blockHeight;
+        Random rand = new Random();
 
         for (int y = 0; y < numBlocksY; y++) {
             for (int x = 0; x < numBlocksX; x++) {
                 JLabel block = new JLabel(
-                        new ImageIcon(getClass().getResource("/GameResources/Images/GrassBlock1.png")));
+                        new ImageIcon(getClass().getResource(
+                                "/GameResources/Images/GrassBlocks/GrassBlock" + rand.nextInt(4) + ".png")));
                 block.setBounds(x * blockWidth, y * blockHeight, blockWidth, blockHeight);
                 this.add(block);
             }
@@ -56,7 +70,8 @@ public class Chunk extends JPanel {
         double chunkY = getChunkIndex().getY();
         double playerX = playerPos.getX();
         double playerY = playerPos.getY();
-        if (chunkX > playerX || chunkY > playerY || playerX > (chunkX + 29) || playerY > (chunkY + 15)) { // checks out of bounds
+        if (chunkX > playerX || chunkY > playerY || playerX > (chunkX + 29) || playerY > (chunkY + 15)) { // checks out
+                                                                                                          // of bounds
             this.containsPlayer = false;
             return null;
         }
@@ -69,7 +84,7 @@ public class Chunk extends JPanel {
         }
         return getChunkIndex().equals(other.getChunkIndex());
     }
-    
+
     public Point getChunkIndex() {
         return this.chunkIndex;
     }

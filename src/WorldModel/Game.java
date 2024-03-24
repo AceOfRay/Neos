@@ -20,13 +20,12 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     private HashSet<Direction> directionSet = new HashSet<>();
     private ImmediateWorld immediateWorld;
     private Zombie character;
-    private int frameTime = 2000;
+    private int frameTime = 0;
 
     public Game() {
         initializeGame();
 
         while (isActive) {
-
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -56,17 +55,20 @@ public class Game extends JFrame implements KeyListener, MouseListener {
 
     public void updatePlayer() {
         if (immediateWorld.checkPlayerMigration()) {
-            // immediateWorld.handlePlayerMigration(); // recreate world
+            immediateWorld.handlePlayerMigration(); // recreate world
             // clearPaneDefaultLayer();
             // this.immediateWorld.addWorldToPane(this.pane);
-            //removeOldChunks();
-            //addNewChunks();
+            // removeOldChunks();
+            // addNewChunks();
         }
-        if (frameTime >= 25) {
+        if (!character.isWalking && frameTime >= 25) {
+            frameTime = 0;
+            this.character.updateFrame();
+        } else if (character.isWalking && frameTime >= 10) {
             frameTime = 0;
             this.character.updateFrame();
         }
-        //updatePlayerFrame();
+        // updatePlayerFrame();
     }
 
     public void removeOldChunks() {
@@ -86,7 +88,6 @@ public class Game extends JFrame implements KeyListener, MouseListener {
         if (directionSet.contains(Direction.Up)) {
 
         }
-
 
     }
 
@@ -109,47 +110,55 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     }
 
     public void checkMove() {
-        boolean up = directionSet.contains(Direction.Up);
-        boolean right = directionSet.contains(Direction.Right);
-        boolean down = directionSet.contains(Direction.Down);
-        boolean left = directionSet.contains(Direction.Left);
+        if (directionSet.size() > 0) {
+            character.isWalking = true;
+            boolean up = directionSet.contains(Direction.Up);
+            boolean right = directionSet.contains(Direction.Right);
+            boolean down = directionSet.contains(Direction.Down);
+            boolean left = directionSet.contains(Direction.Left);
 
-        int dx = 0;
-        int dy = 0;
-        double pdx = 0;
-        double pdy = 0;
+            int dx = 0;
+            int dy = 0;
+            double pdx = 0;
+            double pdy = 0;
 
-        if (up) {
-            character.facingDirection = Direction.Up;
-            dy += 16;
-            pdy -= .25;
+            if (up) {
+                character.facingDirection = Direction.Up;
+                dy += 16;
+                pdy -= .25;
+            }
+
+            if (down) {
+                character.facingDirection = Direction.Down;
+                dy -= 16;
+                pdy += .25;
+            }
+            if (left) {
+                character.facingDirection = Direction.Left;
+                dx += 16;
+                pdx -= 0.25;
+            }
+            if (right) {
+                character.facingDirection = Direction.Right;
+                dx -= 16;
+                pdx += .25;
+            }
+
+            this.immediateWorld.move(dx, dy, pdx, pdy);
+
+        } else {
+            character.isWalking = false;
         }
-
-        if (down) {
-            character.facingDirection = Direction.Down;
-            dy -= 16;
-            pdy += .25;
-        }
-        if (left) {
-            character.facingDirection = Direction.Left;
-            dx += 16;
-            pdx -= 0.25;
-        }
-        if (right) {
-            character.facingDirection = Direction.Right;
-            dx -= 16;
-            pdx += .25;
-        }
-
-        this.immediateWorld.moveWorld(dx, dy);
-        this.immediateWorld.moveCharacter(pdx, pdy);
-
+        character.repaint();
         this.repaint();
+
     }
 
     public void setup() {
         // might read a file here to get the entities in worldEntites but for now
         this.pane = new JLayeredPane();
+        this.pane.setOpaque(true);
+        pane.setBackground(Color.black);
         this.add(pane);
         this.setImmediateWorld();
         this.setEntities();
@@ -220,7 +229,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
 
     public void initializeGame() {
         this.isActive = true;
-        this.setTitle("Grass World");
+        this.setTitle("Ash");
         this.addKeyListener(this);
         this.addMouseListener(this);
         this.setFocusable(true);
@@ -254,7 +263,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {        
+    public void mouseReleased(MouseEvent e) {
     }
 
     @Override
