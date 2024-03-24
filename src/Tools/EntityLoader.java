@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import Entities.Zombie;
+import Entities.Player;
 import WorldModel.ImmediateWorld;
 
 public class EntityLoader {
     private ImmediateWorld world;
-    private Zombie character;
+    private Player character;
 
     public EntityLoader(ImmediateWorld world) {
         this.world = world;
@@ -35,7 +35,7 @@ public class EntityLoader {
                     if (line.startsWith("p")) {
                         String[] pieces = line.split(" ");
                         // check if we should include the entity if based on their location relative to centerChunk in world
-                        this.character = new Zombie(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]), world);
+                        this.character = new Player(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]), world);
                         world.addEntity(character);
                         world.setCharacter(character);
                     }

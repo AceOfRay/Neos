@@ -1,8 +1,7 @@
 package WorldModel;
 
 import javax.swing.*;
-import Entities.Zombie;
-import Tools.ChunkLoader;
+import Entities.Player;
 import Tools.Direction;
 import Tools.EntityLoader;
 
@@ -14,12 +13,12 @@ import java.util.List;
 public class Game extends JFrame implements KeyListener, MouseListener {
     public static final int width = 1920;
     public static final int height = 1024;
-    private List<Zombie> worldEntities;
+    private List<Player> worldEntities;
     private JLayeredPane pane;
     private boolean isActive;
     private HashSet<Direction> directionSet = new HashSet<>();
     private ImmediateWorld immediateWorld;
-    private Zombie character;
+    private Player character;
     private int frameTime = 0;
 
     public Game() {
@@ -54,13 +53,6 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     }
 
     public void updatePlayer() {
-        if (immediateWorld.checkPlayerMigration()) {
-            immediateWorld.handlePlayerMigration(); // recreate world
-            // clearPaneDefaultLayer();
-            // this.immediateWorld.addWorldToPane(this.pane);
-            // removeOldChunks();
-            // addNewChunks();
-        }
         if (!character.isWalking && frameTime >= 25) {
             frameTime = 0;
             this.character.updateFrame();
@@ -68,43 +60,13 @@ public class Game extends JFrame implements KeyListener, MouseListener {
             frameTime = 0;
             this.character.updateFrame();
         }
-        // updatePlayerFrame();
-    }
-
-    public void removeOldChunks() {
-        Component[] components = this.pane.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER);
-        for (Component component : components) {
-            Chunk curChunk = (Chunk) component;
-            if (!this.immediateWorld.contains(curChunk)) {
-                this.pane.remove(component);
-            }
-        }
-        this.pane.revalidate();
-        this.pane.repaint();
-    }
-
-    public void addNewChunks() {
-        Component[] components = this.pane.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER); // only be 6
-        if (directionSet.contains(Direction.Up)) {
-
-        }
-
-    }
-
-    public void clearPaneDefaultLayer() {
-        Component[] components = this.pane.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER);
-        for (Component component : components) {
-            this.pane.remove(component);
-        }
-        this.pane.revalidate();
-        this.pane.repaint();
     }
 
     public void setEntities() {
         new EntityLoader(immediateWorld);
         this.worldEntities = immediateWorld.getEntities();
         this.character = worldEntities.get(0);
-        for (Zombie zombie : worldEntities) {
+        for (Player zombie : worldEntities) {
             this.pane.add(zombie, JLayeredPane.PALETTE_LAYER);
         }
     }
@@ -154,19 +116,20 @@ public class Game extends JFrame implements KeyListener, MouseListener {
 
     }
 
-    public void setup() {
-        // might read a file here to get the entities in worldEntites but for now
+    public void setupPane() {
         this.pane = new JLayeredPane();
         this.pane.setOpaque(true);
-        pane.setBackground(Color.black);
+        this.pane.setBackground(Color.black);
         this.add(pane);
         this.setImmediateWorld();
         this.setEntities();
     }
+    
 
     public void setImmediateWorld() {
         this.immediateWorld = new ImmediateWorld();
-        this.immediateWorld.addWorldToPane(this.pane);
+        this.pane.add((JPanel) this.immediateWorld, JLayeredPane.DEFAULT_LAYER);        
+        //this.immediateWorld.addWorldToPane(this.pane);
     }
 
     @Override
@@ -235,7 +198,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
         this.setFocusable(true);
         this.setSize(new Dimension(width, height));
         this.setResizable(false);
-        this.setup();
+        this.setupPane();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -244,7 +207,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     public void initializeTestGame() {
         this.isActive = true;
         this.setSize(new Dimension(width, height));
-        this.setup();
+        this.setupPane();
     }
 
     public JLayeredPane getPane() {

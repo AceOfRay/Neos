@@ -1,38 +1,36 @@
 package WorldModel;
 
 import Tools.ChunkLoader;
-import Tools.ChunkSaver;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 
-import Entities.Zombie;
+import Entities.Player;
 
-public class ImmediateWorld {
+public class ImmediateWorld extends JPanel {
     private ChunkLoader loader = new ChunkLoader();
     private List<Chunk> immediateWorld;
     private Chunk chunkWithPlayer;
-    private Zombie character;
-    private List<Zombie> entities = new LinkedList<>();
+    private Player character;
+    private List<Player> entities = new LinkedList<>();
     private double playerMoveCountX;
     private double playerMoveCountY;
+    private Point worldLocation;
 
     public ImmediateWorld() {
         this.immediateWorld = loader.getChunks();
+        this.setLayout(null);
+        this.setBounds(-Game.width, -Game.height, Game.width * 3, Game.height * 3);
+        this.worldLocation = new Point(-1920, -1024);
+        putChunksInWorld();
         setChunkWithPlayer();
-    }
 
-    public void handlePlayerMigration() {
-        //List<String> newChunksIndices = determineNewChunkIndices();
-        //new ChunkSaver(newChunksIndices, this);
-        // this.immediateWorld = new ChunkLoader().getChunks();
-        // save state of old world
-        // create a new chunkLoader which will change which chunks are chosen
-        //
     }
 
     public boolean checkPlayerMigration() {
@@ -61,9 +59,9 @@ public class ImmediateWorld {
     }
 
     public void moveWorld(int x, int y) {
-        for (Chunk curChunk : this.immediateWorld) {
-            curChunk.moveChunk(x, y);
-        }
+        Point newPos = new Point((int) this.worldLocation.getX() + x, (int) this.worldLocation.getY() + y);
+        this.setLocation(newPos);
+        this.worldLocation = newPos;
 
     }
 
@@ -84,6 +82,7 @@ public class ImmediateWorld {
             character.moveY(-1);
             playerMoveCountY = 0;
         }
+        checkPlayerMigration();
     }
 
     public boolean pointWithinBounds(Point nextPos) {
@@ -148,15 +147,15 @@ public class ImmediateWorld {
         }
     }
 
-    public List<Zombie> getEntities() {
+    public List<Player> getEntities() {
         return this.entities;
     }
 
-    public void setCharacter(Zombie character) {
+    public void setCharacter(Player character) {
         this.character = character;
     }
 
-    public void addEntity(Zombie newZombie) {
+    public void addEntity(Player newZombie) {
         this.entities.add(newZombie);
     }
 
@@ -192,5 +191,11 @@ public class ImmediateWorld {
             }
         }
         return false;
+    }
+
+    public void putChunksInWorld() {
+        for (Component chunk : this.immediateWorld) {
+            this.add(chunk);
+        }
     }
 }

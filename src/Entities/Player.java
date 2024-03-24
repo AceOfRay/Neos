@@ -12,7 +12,7 @@ import Tools.Direction;
 import WorldModel.Game;
 import WorldModel.ImmediateWorld;
 
-public class Zombie extends JPanel {
+public class Player extends JPanel {
     private Point gamePosition;
     private ImmediateWorld world;
     private int frameIndex = 0;
@@ -20,8 +20,8 @@ public class Zombie extends JPanel {
     public Direction facingDirection = Direction.Down;
     public boolean isWalking;
 
-    public Zombie(double x, double y, ImmediateWorld world) {
-        setBounds(0, 0, 1920, 1080);
+    public Player(double x, double y, ImmediateWorld world) {
+        setBounds(-64, -64, 1920, 1080);
         setOpaque(false);
         this.gamePosition = new Point((int) x, (int) y);
         this.world = world;
@@ -78,27 +78,27 @@ public class Zombie extends JPanel {
         boolean facingLeft = facingDirection.equals(Direction.Left);
 
         if (facingUp && isWalking) { //or is sprinting
-            return getClass().getResource("/GameResources/Images/ZombieImages/UpMoving" + frameIndex + ".png");
+            return getClass().getResource("/GameResources/Images/CharacterImages/RayUpMoving" + frameIndex + ".png");
         } else if (facingDown && isWalking) { //or is sprinting
-            return getClass().getResource("/GameResources/Images/ZombieImages/DownMoving" + frameIndex + ".png");
+            return getClass().getResource("/GameResources/Images/CharacterImages/RayDownMoving" + frameIndex + ".png");
         } else if (facingRight && isWalking) { //or is sprinting
-            return getClass().getResource("/GameResources/Images/ZombieImages/RightMoving" + frameIndex + ".png");
+            return getClass().getResource("/GameResources/Images/CharacterImages/RayRightMoving" + frameIndex + ".png");
         } else if (facingLeft && isWalking) { // or isSprinting
-            return getClass().getResource("/GameResources/Images/ZombieImages/LeftMoving" + frameIndex + ".png");
+            return getClass().getResource("/GameResources/Images/CharacterImages/RayLeftMoving" + frameIndex + ".png");
         } else if (facingUp) {
-            return getClass().getResource("/GameResources/Images/ZombieImages/UpStill" + frameIndex + ".png");
+            return getClass().getResource("/GameResources/Images/CharacterImages/RayUpStill" + frameIndex + ".png");
         } else if (facingDown) {
             return getClass()
-                    .getResource("/GameResources/Images/ZombieImages/DownStill" + frameIndex + ".png");
+                    .getResource("/GameResources/Images/CharacterImages/RayDownStill" + frameIndex + ".png");
         } else if (facingRight) {
             return getClass()
-                    .getResource("/GameResources/Images/ZombieImages/RightStill" + frameIndex + ".png");
+                    .getResource("/GameResources/Images/CharacterImages/RayRightStill" + frameIndex + ".png");
         } else if (facingLeft) {
             return getClass()
-                    .getResource("/GameResources/Images/ZombieImages/LeftStill" + frameIndex + ".png");
+                    .getResource("/GameResources/Images/CharacterImages/RayLeftStill" + frameIndex + ".png");
         } else {
             return getClass()
-                    .getResource("/GameResources/Images/ZombieImages/DownStill" + frameIndex + ".png");
+                    .getResource("/GameResources/Images/CharacterImages/RayDownStill" + frameIndex + ".png");
         }
     }
 }

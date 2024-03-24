@@ -52,7 +52,6 @@ public class Chunk extends JPanel {
         int numBlocksX = 30; // Game.width / this.blockWidth;
         int numBlocksY = 16; // Game.height / this.blockHeight;
         Random rand = new Random();
-
         for (int y = 0; y < numBlocksY; y++) {
             for (int x = 0; x < numBlocksX; x++) {
                 JLabel block = new JLabel(
