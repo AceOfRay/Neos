@@ -24,10 +24,10 @@ public class ImmediateWorld extends JPanel {
     public ImmediateWorld() {
         this.immediateWorld = loader.getChunks();
         this.setLayout(null);
-        this.setBounds(-Game.width, -Game.height, Game.width * 3, Game.height * 3);
-        this.worldLocation = new Point(-Game.width, -Game.height);
+        this.setBounds(0, 0, Game.width * 5, Game.height * 5);
         putChunksInWorld();
         setChunkWithPlayer();
+        this.worldLocation = this.chunkWithPlayer.getChunkPixelLocation();
     }
 
     public boolean checkPlayerMigration() {
@@ -165,6 +165,10 @@ public class ImmediateWorld extends JPanel {
         return this.immediateWorld;
     }
 
+    public Point getWorldLocation() {
+        return this.worldLocation;
+    }
+
     public Chunk findChunkWithPlayer() {
         for (Chunk curChunk : getImmediateWorld()) {
             if (curChunk.getContainsPlayer()) {
@@ -193,9 +197,16 @@ public class ImmediateWorld extends JPanel {
 
     public void putChunksInWorld() {
         for (Component chunk : this.immediateWorld) {
-            System.out.println(chunk.getLocation());
             this.add(chunk);
         }
-        
+    }
+
+    public ImmediateWorld(List<Chunk> chunks, Chunk cwp) { // test constructor
+        this.immediateWorld = chunks;
+        this.setLayout(null);
+        this.setBounds(0, 0, Game.width * 5, Game.height * 5);
+        putChunksInWorld();
+        setChunkWithPlayer();
+        this.worldLocation = this.chunkWithPlayer.getChunkPixelLocation();
     }
 }

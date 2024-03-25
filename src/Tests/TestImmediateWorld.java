@@ -14,16 +14,61 @@ public class TestImmediateWorld {
     public void testChunkPixelLocations1() {
         ImmediateWorld world = new ImmediateWorld();
         List<Chunk> chunks = world.getImmediateWorld();
-        assertEquals(new Point(-1920, 1024), chunks.get(6).getChunkPixelLocation());
+        assertEquals(new Point(1920, 1024), chunks.get(6).getChunkPixelLocation());
     }
 
     @Test
     public void testImmediateWorldSize() {
         ImmediateWorld world = new ImmediateWorld();
         List<Chunk> chunks = world.getImmediateWorld();
-        for (Chunk curChunk : chunks) {
-            System.out.println(curChunk);
-        }
-        assertEquals(9, chunks.size());
+        assertEquals(25, chunks.size());
     }
+
+    @Test 
+    public void testImmediateWorldChunkPoints() {
+        ImmediateWorld world = new ImmediateWorld();
+        List<Chunk> chunks = world.getImmediateWorld();
+        int hcnt = 0;
+        int vcnt = 0;
+        for (Chunk c : chunks) {
+            if (vcnt > 64) {
+                break;
+            }
+            if (hcnt > 120) {
+                hcnt = 0;
+                vcnt += 16;
+            }
+            assertEquals(new Point (hcnt, vcnt), c.getChunkIndex());
+            hcnt += 30;
+        }
+    }
+
+    @Test
+    public void testImmediateWorldChunkWithPlayer() {
+        List<Chunk> simulatedChunks = List.of(
+            new Chunk(0, 0), new Chunk(30, 0), new Chunk(60, 0)
+        );
+        Chunk cwp = simulatedChunks.get(1);
+        cwp.setContainsPlayer();
+        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+        assertEquals(cwp, world.getChunkWithPlayer());
+    }
+
+    /**
+     * These 3 tests ensures that the location of the immediate world 
+     * upon spawn changes depending on spawn location
+     */
+    @Test
+    public void testWorldPlayerSpawn() {
+        List<Chunk> simulatedChunks = List.of(
+            new Chunk(0, 0), new Chunk(30, 0), new Chunk(60, 0)
+        );
+        Chunk cwp = simulatedChunks.get(1);
+        cwp.setContainsPlayer();
+        cwp.placeChunk(1920, 0);
+        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+        assertEquals(new Point(-1920, 0), world.getLocation());
+    }
+
+
 }

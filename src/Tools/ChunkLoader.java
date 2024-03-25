@@ -32,7 +32,7 @@ public class ChunkLoader {
                     String[] pieces = line.split(" ");
                     Chunk curChunk;
                     switch (pieces[0]) {
-                        case "np": {
+                        case "c": {
                             curChunk = new Chunk(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]));
                             break;
                         }

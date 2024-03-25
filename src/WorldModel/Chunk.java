@@ -33,10 +33,8 @@ public class Chunk extends JPanel {
 
     public void moveChunk(int x, int y) {
         Point newPos = new Point((int) this.chunkPixelLocation.getX() + x, (int) this.chunkPixelLocation.getY() + y);
-        //if (pixelWithinBounds(newPos)) {
             this.setLocation(newPos);
             this.chunkPixelLocation = newPos;
-        //}
     }
 
     public boolean pixelWithinBounds(Point px) {
@@ -92,17 +90,18 @@ public class Chunk extends JPanel {
     }
 
     public void createPoints() {
-        int startY = (int) getChunkIndex().getY();
-        int startX = (int) getChunkIndex().getX();
-
-        for (int i = 0; i < 16; i++) {
+        int startY = (int) getChunkIndex().getX();
+        int startX = (int) getChunkIndex().getY();
+    
+        for (int i = 0; i < 16; i++) {  
             List<Point> row = new ArrayList<>();
-            for (int j = 0; j < 30; j++) {
-                row.add(new Point(i + startX, j + startY)); // if this doesn't work we swap start x and start y
+            for (int j = 0; j < 30; j++) {  
+                row.add(new Point(j + startX, i + startY));
             }
             this.chunkPoints.add(row);
         }
     }
+    
 
     @Override
     public String toString() {
