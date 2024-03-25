@@ -1,6 +1,7 @@
 package Tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.awt.Point;
 import java.util.List;
@@ -24,8 +25,54 @@ public class TestImmediateWorld {
         assertEquals(25, chunks.size());
     }
 
-    @Test 
-    public void testImmediateWorldChunkPoints() {
+    @Test
+    public void testWorldChunksPxPlacement_Sim() {
+        List<Chunk> simulatedChunks = List.of(
+                new Chunk(0, 0), new Chunk(30, 30), new Chunk(60, 60));
+        int hcnt = 0;
+        int vcnt = 0;
+
+        for (Chunk c : simulatedChunks) { // placing chunks where they should be
+            c.placeChunk(hcnt, vcnt);
+            hcnt += 1920;
+            vcnt += 1024;
+        }
+
+        Chunk cwp = simulatedChunks.get(1);
+        cwp.setContainsPlayer();
+        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+
+        hcnt = 0;
+        vcnt = 0;
+        List<Chunk> chunks = world.getImmediateWorld();
+        for (Chunk c : chunks) {
+            assertEquals(new Point(hcnt, vcnt), c.getLocation());
+            hcnt += 1920;
+            vcnt += 1024;
+        }
+    }
+
+    @Test
+    public void testWorldChunksPxPlacement_Actual() {
+        int hcnt = 0;
+        int vcnt = 0;
+        ImmediateWorld world = new ImmediateWorld();
+        List<Chunk> chunks = world.getImmediateWorld();
+        for (Chunk c : chunks) {
+            if (vcnt > 4096) {
+                break;
+            }
+            if (hcnt > 7680) {
+                hcnt = 0;
+                vcnt += 1024;
+            }
+            assertEquals(new Point(hcnt, vcnt), c.getLocation());
+            hcnt += 1920;
+        }
+    }
+
+    @Test
+    public void testWorldChunkPoints() {
         ImmediateWorld world = new ImmediateWorld();
         List<Chunk> chunks = world.getImmediateWorld();
         int hcnt = 0;
@@ -38,7 +85,7 @@ public class TestImmediateWorld {
                 hcnt = 0;
                 vcnt += 16;
             }
-            assertEquals(new Point (hcnt, vcnt), c.getChunkIndex());
+            assertEquals(new Point(hcnt, vcnt), c.getChunkIndex());
             hcnt += 30;
         }
     }
@@ -46,8 +93,7 @@ public class TestImmediateWorld {
     @Test
     public void testImmediateWorldChunkWithPlayer() {
         List<Chunk> simulatedChunks = List.of(
-            new Chunk(0, 0), new Chunk(30, 0), new Chunk(60, 0)
-        );
+                new Chunk(0, 0), new Chunk(30, 0), new Chunk(60, 0));
         Chunk cwp = simulatedChunks.get(1);
         cwp.setContainsPlayer();
         ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
@@ -55,20 +101,31 @@ public class TestImmediateWorld {
     }
 
     /**
-     * These 3 tests ensures that the location of the immediate world 
+     * These 3 tests ensures that the location of the immediate world
      * upon spawn changes depending on spawn location
      */
     @Test
     public void testWorldPlayerSpawn() {
         List<Chunk> simulatedChunks = List.of(
-            new Chunk(0, 0), new Chunk(30, 0), new Chunk(60, 0)
-        );
+                new Chunk(0, 0), new Chunk(30, 0), new Chunk(60, 0));
         Chunk cwp = simulatedChunks.get(1);
         cwp.setContainsPlayer();
         cwp.placeChunk(1920, 0);
         ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
         assertEquals(new Point(-1920, 0), world.getLocation());
+        assertNotEquals(new Point(0, 0), world.getLocation());
     }
 
+    @Test
+    public void testWorldPlayerSpawn2() {
+        List<Chunk> simulatedChunks = List.of(
+                new Chunk(0, 0), new Chunk(30, 0), new Chunk(60, 0));
+        Chunk cwp = simulatedChunks.get(2);
+        cwp.setContainsPlayer();
+        cwp.placeChunk(3840, 0);
+        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+        assertEquals(new Point(-3840, 0), world.getLocation());
+        assertNotEquals(new Point(0, 0), world.getLocation());
+    }
 
 }

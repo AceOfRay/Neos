@@ -50,17 +50,14 @@ public class Player extends JPanel {
     public void moveX(double x) {
         double newX = getGamePosition().getX() + (x > 0 ? 1 : -1);
         Point nextPos = new Point((int) newX, (int) getGamePosition().getY());
-        //if (world.pointWithinBounds(nextPos)) {
-            this.gamePosition = nextPos;
-        //}
+        this.gamePosition = nextPos;
     }
 
     public void moveY(double y) {
         double newY = getGamePosition().getY() + (y > 0 ? 1 : -1);
         Point nextPos = new Point((int) getGamePosition().getX(), (int) newY);
-        if (world.pointWithinBounds(nextPos)) {
-            this.gamePosition = nextPos;
-        }
+        this.gamePosition = nextPos;
+
     }
 
     public void setImmediateWorld(ImmediateWorld world) {
@@ -77,11 +74,11 @@ public class Player extends JPanel {
         boolean facingRight = facingDirection.equals(Direction.Right);
         boolean facingLeft = facingDirection.equals(Direction.Left);
 
-        if (facingUp && isWalking) { //or is sprinting
+        if (facingUp && isWalking) { // or is sprinting
             return getClass().getResource("/GameResources/Images/CharacterImages/RayUpMoving" + frameIndex + ".png");
-        } else if (facingDown && isWalking) { //or is sprinting
+        } else if (facingDown && isWalking) { // or is sprinting
             return getClass().getResource("/GameResources/Images/CharacterImages/RayDownMoving" + frameIndex + ".png");
-        } else if (facingRight && isWalking) { //or is sprinting
+        } else if (facingRight && isWalking) { // or is sprinting
             return getClass().getResource("/GameResources/Images/CharacterImages/RayRightMoving" + frameIndex + ".png");
         } else if (facingLeft && isWalking) { // or isSprinting
             return getClass().getResource("/GameResources/Images/CharacterImages/RayLeftMoving" + frameIndex + ".png");

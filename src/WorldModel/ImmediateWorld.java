@@ -27,7 +27,7 @@ public class ImmediateWorld extends JPanel {
         this.setBounds(0, 0, Game.width * 5, Game.height * 5);
         putChunksInWorld();
         setChunkWithPlayer();
-        this.worldLocation = this.chunkWithPlayer.getChunkPixelLocation();
+        setWorldLocation();
     }
 
     public boolean checkPlayerMigration() {
@@ -44,23 +44,26 @@ public class ImmediateWorld extends JPanel {
     }
 
     public void updateChunkWithPlayer(Chunk newChunk) {
-        // System.out.println("updating Chunk With Player");
         this.chunkWithPlayer.removeContainsPlayer();
         this.chunkWithPlayer = newChunk;
         newChunk.setContainsPlayer();
     }
 
     public void move(int dx, int dy, double pdx, double pdy) {
-        moveWorld(dx, dy);
-        moveCharacter(pdx, pdy);
-        this.revalidate();
-        this.repaint();
+        if (moveWorld(dx, dy)) {
+            moveCharacter(pdx, pdy);
+        }
     }
 
-    public void moveWorld(int x, int y) {
+    public boolean moveWorld(int x, int y) {
         Point newPos = new Point((int) this.worldLocation.getX() + x, (int) this.worldLocation.getY() + y);
-        this.setLocation(newPos);
-        this.worldLocation = newPos;
+        if (pxWithinBounds(newPos)) {
+            this.setLocation(newPos);
+            this.worldLocation = newPos;
+            return true;
+        }
+        return false;
+
     }
 
     public void moveCharacter(double dx, double dy) {
@@ -83,60 +86,13 @@ public class ImmediateWorld extends JPanel {
         checkPlayerMigration();
     }
 
-    public boolean pointWithinBounds(Point nextPos) {
-        int playerX = (int) nextPos.getX();
-        int playerY = (int) nextPos.getY();
-        if (playerX > 60 || playerX < -30 || playerY > 32 || playerY < -16) {
+    public boolean pxWithinBounds(Point pxLoc) {
+        double x = pxLoc.getX();
+        double y = pxLoc.getY();
+        if (x > 896 || x < -8640 || y > 448 || y < -4608) {
             return false;
         }
         return true;
-    }
-
-    public List<String> determineNewChunkIndices() { // probably these for loops that dont function properly
-        List<String> newChunks = new ArrayList<>();
-        List<Chunk> oldWorld = getImmediateWorld();
-
-        int playerChunkIndex = -1;
-        for (int i = 0; i < oldWorld.size(); i++) {
-            if (oldWorld.get(i).getContainsPlayer()) {
-                playerChunkIndex = i;// may break here
-                break;
-            }
-        }
-
-        if (playerChunkIndex != -1) {
-            switch (playerChunkIndex) {
-                case 1: // Top 6 chunks
-                    for (int i = 6; i <= 8; i++) {
-                        Chunk chunk = oldWorld.remove(6);
-                        newChunks.add(chunk.getChunkIndex().getX() + ", " + (chunk.getChunkIndex().getY() + 48));
-                    }
-                    break;
-                case 3: // Left 6 chunks
-                    for (int i = 2; i <= 4; i += 3) {
-                        Chunk chunk = oldWorld.remove(2);
-                        newChunks.add(chunk.getChunkIndex().getX() - 90 + ", " + chunk.getChunkIndex().getY());
-                    }
-                    break;
-                case 5: // Right 6 chunks
-                    for (int i = 0; i <= 2; i += 3) {
-                        Chunk chunk = oldWorld.remove(0);
-                        newChunks.add(chunk.getChunkIndex().getX() + 90 + ", " + chunk.getChunkIndex().getY());
-                    }
-                    break;
-                case 7: // Bottom 7 chunks
-                    for (int i = 0; i <= 2; i++) {
-                        Chunk chunk = oldWorld.remove(0);
-                        newChunks.add(chunk.getChunkIndex().getX() + ", " + (chunk.getChunkIndex().getY() - 48));
-                    }
-                    break;
-            }
-        }
-        for (Chunk cur : oldWorld) {
-            newChunks.add(cur.getChunkIndex().getX() + ", " + cur.getChunkIndex().getY());
-        }
-
-        return newChunks;
     }
 
     public void addWorldToPane(JLayeredPane pane) {
@@ -201,12 +157,18 @@ public class ImmediateWorld extends JPanel {
         }
     }
 
+    public void setWorldLocation() {
+        Point cwp = this.chunkWithPlayer.getChunkPixelLocation();
+        this.worldLocation = new Point((int) -cwp.getX(), (int) -cwp.getY());
+        this.setLocation(worldLocation);
+    }
+
     public ImmediateWorld(List<Chunk> chunks, Chunk cwp) { // test constructor
         this.immediateWorld = chunks;
         this.setLayout(null);
         this.setBounds(0, 0, Game.width * 5, Game.height * 5);
         putChunksInWorld();
         setChunkWithPlayer();
-        this.worldLocation = this.chunkWithPlayer.getChunkPixelLocation();
+        setWorldLocation();
     }
 }

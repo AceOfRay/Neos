@@ -1,2 +1,2 @@
 # Entities:
-p 15 8
+p 0 0
