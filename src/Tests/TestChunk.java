@@ -8,7 +8,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import Entities.Entity;
+import Entities.LavenderTree;
 import WorldModel.Chunk;
+import WorldModel.ImmediateWorld;
 
 public class TestChunk {
 
@@ -76,9 +79,17 @@ public class TestChunk {
 
     @Test
     public void testChunkEquals2() {
-        Chunk c1 = new Chunk (1, 1);
-        Chunk c2 = new Chunk (1, 1);
+        Chunk c1 = new Chunk(1, 1);
+        Chunk c2 = new Chunk(1, 1);
         assertEquals(c1, c2);
+    }
+    
+    @Test
+    public void testEntityPlacement1() {
+        Chunk c1 = new Chunk(0, 0);
+        LavenderTree t = new LavenderTree(8, 8, new ImmediateWorld());
+        c1.placeEntity(t);
+        assertEquals(new Point (8*64, 8*64), t.getLocation());
     }
 
 }

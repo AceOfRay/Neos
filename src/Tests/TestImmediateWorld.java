@@ -3,10 +3,15 @@ package Tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import org.junit.jupiter.api.Test;
+
+import Entities.LavenderTree;
 import WorldModel.Chunk;
 import WorldModel.ImmediateWorld;
 
@@ -102,7 +107,8 @@ public class TestImmediateWorld {
 
     /**
      * These 2 tests ensures that the location of the immediate world
-     * upon spawn changes depending on spawn location relative to chunk and not point
+     * upon spawn changes depending on spawn location relative to chunk and not
+     * point
      */
     @Test
     public void testWorldPlayerSpawn() {
@@ -126,6 +132,26 @@ public class TestImmediateWorld {
         ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
         assertEquals(new Point(-3840, 0), world.getLocation());
         assertNotEquals(new Point(0, 0), world.getLocation());
+    }
+
+    @Test
+    public void testEntityPlacement1() {
+        List<Chunk> simulatedChunks = List.of(
+                new Chunk(0, 0), new Chunk(30, 0), new Chunk(60, 0));
+        Chunk cwp = simulatedChunks.get(0);
+        cwp.setContainsPlayer();
+        cwp.placeChunk(0, 0);
+
+        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+        LavenderTree t = new LavenderTree(8, 8, world);
+        world.placeEntity(t);
+        for (Component c : cwp.getComponents()) {
+            if (c instanceof LavenderTree) {
+                System.out.println(c);
+            }
+        }
+        assertEquals(new Point(8 * 64, 8 * 64), t.getLocation());
+        assertEquals(481, cwp.getComponentCount());
     }
 
 }

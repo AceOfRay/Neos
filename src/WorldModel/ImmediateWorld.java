@@ -5,9 +5,10 @@ import java.awt.Component;
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import Entities.Entity;
+import Entities.LavenderTree;
 import Entities.Player;
 
 public class ImmediateWorld extends JPanel {
@@ -15,7 +16,7 @@ public class ImmediateWorld extends JPanel {
     private List<Chunk> immediateWorld;
     private Chunk chunkWithPlayer;
     private Player character;
-    private List<Player> entities = new LinkedList<>();
+    private List<Entity> entities = new LinkedList<>();
     private double playerMoveCountX;
     private double playerMoveCountY;
     private Point worldLocation;
@@ -40,6 +41,25 @@ public class ImmediateWorld extends JPanel {
             }
         }
         return false;
+    }
+
+    public void placeEntity(Entity e) {
+        LavenderTree t = (LavenderTree) e;
+        Chunk c = findChunk(t);
+        if (c != null) {
+            c.placeEntity(t);
+        }
+        
+    }
+    
+    public Chunk findChunk(Entity e) {
+        for (Chunk c : this.immediateWorld) {
+            LavenderTree t = (LavenderTree) e;
+            if (c.pointWithinBounds(t.getGamePosition())) {
+                return c;
+            }
+        }
+        return null;
     }
 
     public void updateChunkWithPlayer(Chunk newChunk) {
@@ -94,13 +114,7 @@ public class ImmediateWorld extends JPanel {
         return true;
     }
 
-    public void addWorldToPane(JLayeredPane pane) {
-        for (Chunk curChunk : this.immediateWorld) {
-            pane.add(curChunk, JLayeredPane.DEFAULT_LAYER);
-        }
-    }
-
-    public List<Player> getEntities() {
+    public List<Entity> getEntities() {
         return this.entities;
     }
 
@@ -111,8 +125,9 @@ public class ImmediateWorld extends JPanel {
     public Player getCharacter() {
         return this.character;
     }
-    public void addEntity(Player newZombie) {
-        this.entities.add(newZombie);
+
+    public void addEntity(Entity e) {
+        this.entities.add(e);
     }
 
     public Chunk getChunkWithPlayer() {

@@ -6,6 +6,7 @@ import java.awt.Point;
 
 import org.junit.jupiter.api.Test;
 
+import Entities.Entity;
 import WorldModel.Game;
 import WorldModel.ImmediateWorld;
 
@@ -62,4 +63,5 @@ public class TestGame {
         assertEquals(new Point(14, 8), world.getCharacter().getGamePosition());
         assertEquals(new Point(64, 0), world.getLocation());
     }
+
 }

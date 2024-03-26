@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JPanel;
 
 import Tools.Direction;
 import WorldModel.Game;
 import WorldModel.ImmediateWorld;
 
-public class Player extends JPanel {
+public class Player extends JPanel implements Entity {
     private Point gamePosition;
     private ImmediateWorld world;
     private int frameIndex = 0;

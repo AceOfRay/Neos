@@ -1,12 +1,16 @@
 package WorldModel;
 
 import javax.swing.*;
-import java.awt.Point;
+
+import Entities.Entity;
+import Entities.LavenderTree;
+
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.ArrayList;
 
-public class Chunk extends JPanel {
+public class Chunk extends JLayeredPane {
 
     protected int blockWidth;
     protected int blockHeight;
@@ -20,10 +24,8 @@ public class Chunk extends JPanel {
         this.chunkIndex = new Point(x, y);
         this.blockWidth = 64;
         this.blockHeight = 64;
-        this.setLayout(null);
         this.makeBackground();
         this.createPoints();
-
     }
 
     public void placeChunk(int pxLoc, int pyLoc) {
@@ -31,19 +33,18 @@ public class Chunk extends JPanel {
         this.setBounds((int) chunkPixelLocation.getX(), (int) chunkPixelLocation.getY(), Game.width, Game.height);
     }
 
-    public void moveChunk(int x, int y) {
-        Point newPos = new Point((int) this.chunkPixelLocation.getX() + x, (int) this.chunkPixelLocation.getY() + y);
-            this.setLocation(newPos);
-            this.chunkPixelLocation = newPos;
+    public void placeEntity(Entity e) {
+        LavenderTree lt = (LavenderTree) e;
+        Point pxRelativeToChunk = determinePXLocation(lt.getGamePosition());
+        lt.setBounds(pxRelativeToChunk.x, pxRelativeToChunk.y, 96, 96);
+
+        this.add(lt, JLayeredPane.PALETTE_LAYER);
     }
 
-    public boolean pixelWithinBounds(Point px) {
-        double x = px.getX();
-        double y = px.getY();
-        if (x <= -3840 || x >= 1920 || y <= -1024 || y >= 2048) {
-            return false;
-        }
-        return true;
+    public Point determinePXLocation(Point p) {
+        Point idx = getChunkIndex();
+        Point relativePosition = new Point((int) (p.getX() - idx.getX()), (int) (p.getY() - idx.getY()));
+        return new Point((int) relativePosition.getX() * 64, (int) relativePosition.getY() * 64);
     }
 
     public void makeBackground() {
@@ -52,13 +53,27 @@ public class Chunk extends JPanel {
         Random rand = new Random();
         for (int y = 0; y < numBlocksY; y++) {
             for (int x = 0; x < numBlocksX; x++) {
-                JLabel block = new JLabel(
-                        new ImageIcon(getClass().getResource(
-                                "/GameResources/Images/GrassBlocks/GrassBlock" + rand.nextInt(4) + ".png")));
+                JLabel block = new JLabel(new ImageIcon(getClass().getResource(
+                        "/GameResources/Images/GrassBlocks/GrassBlock" + rand.nextInt(4) + ".png")));
                 block.setBounds(x * blockWidth, y * blockHeight, blockWidth, blockHeight);
-                this.add(block);
+                this.add(block, JLayeredPane.DEFAULT_LAYER);
             }
         }
+    }
+
+    public boolean pointWithinBounds(Point p) {
+        int left = (int) getChunkIndex().getX();
+        int top = (int) getChunkIndex().getY();
+        int right = left + 29;
+        int bottom = top + 15;
+
+        double eX = p.getX();
+        double eY = p.getY();
+
+        if (eX > left && eX < right && eY > top && eY < bottom) {
+            return true;
+        }
+        return false;
     }
 
     public Chunk containsPlayer(Point playerPos) {
@@ -75,50 +90,30 @@ public class Chunk extends JPanel {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        }
-        Chunk c;
-        if (other instanceof Chunk) {
-            c = (Chunk) other;
-        } else {
-            return false;
-        }
-        
-        return getChunkIndex().equals(c.getChunkIndex());
+    public String toString() {
+        return "Chunk @ GamePoint: " + "[" + getChunkIndex().getX() + ", " + getChunkIndex().getY() + "]"
+                + " Contains Player: " + containsPlayer;
+    }
+
+    public List<List<Point>> getChunkPoints() {
+        return this.chunkPoints;
     }
 
     public Point getChunkIndex() {
         return this.chunkIndex;
     }
 
-    public Point getChunkPixelLocation() {
-        return this.chunkPixelLocation;
-    }
-
     public void createPoints() {
         int startX = (int) getChunkIndex().getX();
-        int startY= (int) getChunkIndex().getY();
-    
-        for (int i = 0; i < 16; i++) {  
+        int startY = (int) getChunkIndex().getY();
+
+        for (int i = 0; i < 16; i++) {
             List<Point> row = new ArrayList<>();
-            for (int j = 0; j < 30; j++) {  
+            for (int j = 0; j < 30; j++) {
                 row.add(new Point(j + startX, i + startY));
             }
             this.chunkPoints.add(row);
         }
-    }
-    
-
-    @Override
-    public String toString() {
-        return "Chunk @ GamePoint: " + "[" + getChunkIndex().getX() + ", " + getChunkIndex().getY() + "]"
-                + " Contains Player: " + getContainsPlayer();
-    }
-
-    public List<List<Point>> getChunkPoints() {
-        return this.chunkPoints;
     }
 
     public void setContainsPlayer() {
@@ -131,5 +126,9 @@ public class Chunk extends JPanel {
 
     public boolean getContainsPlayer() {
         return this.containsPlayer;
+    }
+
+    public Point getChunkPixelLocation() {
+        return this.chunkPixelLocation;
     }
 }

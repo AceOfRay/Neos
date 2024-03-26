@@ -1,7 +1,11 @@
 package WorldModel;
 
 import javax.swing.*;
+
+import Entities.Entity;
+import Entities.LavenderTree;
 import Entities.Player;
+import Entities.Tree;
 import Tools.Direction;
 import Tools.EntityLoader;
 
@@ -13,7 +17,7 @@ import java.util.List;
 public class Game extends JFrame implements KeyListener, MouseListener {
     public static final int width = 1920;
     public static final int height = 1024;
-    private List<Player> worldEntities;
+    private List<Entity> worldEntities;
     private JLayeredPane pane;
     private boolean isActive;
     private HashSet<Direction> directionSet = new HashSet<>();
@@ -23,7 +27,6 @@ public class Game extends JFrame implements KeyListener, MouseListener {
 
     public Game() {
         initializeGame();
-        System.out.println(this.immediateWorld.getLocation());
         while (isActive) {
             try {
                 Thread.sleep(20);
@@ -66,9 +69,15 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     public void setEntities() {
         new EntityLoader(immediateWorld);
         this.worldEntities = immediateWorld.getEntities();
-        this.player = worldEntities.get(0);
-        for (Player player : worldEntities) {
-            this.pane.add(player, JLayeredPane.PALETTE_LAYER);
+        this.player = immediateWorld.getCharacter();
+        for (Entity e : worldEntities) {
+            if (e instanceof Player) {
+                Player p = (Player) e;
+                this.pane.add(p, JLayeredPane.PALETTE_LAYER);
+            } else if (e instanceof LavenderTree) {
+                LavenderTree lt = (LavenderTree) e;
+                this.immediateWorld.placeEntity(lt);
+            }
         }
     }
 
