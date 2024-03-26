@@ -98,8 +98,8 @@ public class Chunk extends JPanel {
     }
 
     public void createPoints() {
-        int startY = (int) getChunkIndex().getX();
-        int startX = (int) getChunkIndex().getY();
+        int startX = (int) getChunkIndex().getX();
+        int startY= (int) getChunkIndex().getY();
     
         for (int i = 0; i < 16; i++) {  
             List<Point> row = new ArrayList<>();

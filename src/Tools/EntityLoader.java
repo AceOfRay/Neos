@@ -26,6 +26,21 @@ public class EntityLoader {
             System.out.println("An error occurred while loading chunks from file: " + e.getMessage());
         }
     }
+
+    public EntityLoader(ImmediateWorld world, String filepath) {
+        this.world = world;
+        try {
+            InputStream inputStream = getClass().getClassLoader()
+                    .getResourceAsStream(filepath);
+            if (inputStream != null) {
+                loadEntitiesFromInputStream(inputStream);
+            } else {
+                System.out.println("Could not find the desired file.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while loading chunks from file: " + e.getMessage());
+        }
+    }
     
     private void loadEntitiesFromInputStream(InputStream inputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {

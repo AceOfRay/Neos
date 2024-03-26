@@ -3,7 +3,6 @@ package WorldModel;
 import Tools.ChunkLoader;
 import java.awt.Component;
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JLayeredPane;
@@ -109,6 +108,9 @@ public class ImmediateWorld extends JPanel {
         this.character = character;
     }
 
+    public Player getCharacter() {
+        return this.character;
+    }
     public void addEntity(Player newZombie) {
         this.entities.add(newZombie);
     }

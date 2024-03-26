@@ -18,12 +18,12 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     private boolean isActive;
     private HashSet<Direction> directionSet = new HashSet<>();
     private ImmediateWorld immediateWorld;
-    private Player character;
+    private Player player;
     private int frameTime = 0;
 
     public Game() {
         initializeGame();
-        
+        System.out.println(this.immediateWorld.getLocation());
         while (isActive) {
             try {
                 Thread.sleep(20);
@@ -54,27 +54,27 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     }
 
     public void updatePlayer() {
-        if (!character.isWalking && frameTime >= 25) {
+        if (!player.isWalking && frameTime >= 25) {
             frameTime = 0;
-            this.character.updateFrame();
-        } else if (character.isWalking && frameTime >= 10) {
+            this.player.updateFrame();
+        } else if (player.isWalking && frameTime >= 10) {
             frameTime = 0;
-            this.character.updateFrame();
+            this.player.updateFrame();
         }
     }
 
     public void setEntities() {
         new EntityLoader(immediateWorld);
         this.worldEntities = immediateWorld.getEntities();
-        this.character = worldEntities.get(0);
-        for (Player zombie : worldEntities) {
-            this.pane.add(zombie, JLayeredPane.PALETTE_LAYER);
+        this.player = worldEntities.get(0);
+        for (Player player : worldEntities) {
+            this.pane.add(player, JLayeredPane.PALETTE_LAYER);
         }
     }
 
     public void checkMove() {
         if (directionSet.size() > 0) {
-            character.isWalking = true;
+            player.isWalking = true;
             boolean up = directionSet.contains(Direction.Up);
             boolean right = directionSet.contains(Direction.Right);
             boolean down = directionSet.contains(Direction.Down);
@@ -86,33 +86,32 @@ public class Game extends JFrame implements KeyListener, MouseListener {
             double pdy = 0;
 
             if (up) {
-                character.facingDirection = Direction.Up;
+                player.facingDirection = Direction.Up;
                 dy += 16;
                 pdy -= .25;
             }
 
             if (down) {
-                character.facingDirection = Direction.Down;
+                player.facingDirection = Direction.Down;
                 dy -= 16;
                 pdy += .25;
             }
             if (left) {
-                character.facingDirection = Direction.Left;
+                player.facingDirection = Direction.Left;
                 dx += 16;
                 pdx -= 0.25;
             }
             if (right) {
-                character.facingDirection = Direction.Right;
+                player.facingDirection = Direction.Right;
                 dx -= 16;
                 pdx += .25;
             }
 
             this.immediateWorld.move(dx, dy, pdx, pdy);
-
         } else {
-            character.isWalking = false;
+            player.isWalking = false;
         }
-        character.repaint();
+        player.repaint();
         this.repaint();
 
     }
@@ -129,7 +128,6 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     public void setImmediateWorld() {
         this.immediateWorld = new ImmediateWorld();
         this.pane.add(this.immediateWorld, JLayeredPane.DEFAULT_LAYER);
-        // this.immediateWorld.addWorldToPane(this.pane);
     }
 
     @Override
@@ -237,4 +235,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     public void mouseExited(MouseEvent e) {
     }
 
+    public ImmediateWorld getImmediateWorld() {
+        return this.immediateWorld;
+    }
 }

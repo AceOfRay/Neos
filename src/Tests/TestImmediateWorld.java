@@ -72,7 +72,7 @@ public class TestImmediateWorld {
     }
 
     @Test
-    public void testWorldChunkPoints() {
+    public void testWorldChunkIndexes() {
         ImmediateWorld world = new ImmediateWorld();
         List<Chunk> chunks = world.getImmediateWorld();
         int hcnt = 0;
@@ -101,8 +101,8 @@ public class TestImmediateWorld {
     }
 
     /**
-     * These 3 tests ensures that the location of the immediate world
-     * upon spawn changes depending on spawn location
+     * These 2 tests ensures that the location of the immediate world
+     * upon spawn changes depending on spawn location relative to chunk and not point
      */
     @Test
     public void testWorldPlayerSpawn() {

@@ -54,7 +54,7 @@ public class Player extends JPanel {
     }
 
     public void moveY(double y) {
-        double newY = getGamePosition().getY() + (y > 0 ? 1 : -1);
+        double newY = getGamePosition().getY() + (y > 0 ? -1 : 1);
         Point nextPos = new Point((int) getGamePosition().getX(), (int) newY);
         this.gamePosition = nextPos;
 
