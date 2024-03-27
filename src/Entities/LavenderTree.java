@@ -1,5 +1,6 @@
 package Entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -20,22 +21,24 @@ public class LavenderTree extends JPanel implements Tree, Entity {
     private int frameMax = 2;
 
     public LavenderTree(double x, double y, ImmediateWorld world) {
-        setBounds(0, 0, 1920, 1080);
+        setBounds(0, 0, 96, 96);
         setOpaque(false);
         this.gamePosition = new Point((int) x, (int) y);
         this.world = world;
+        this.setLayout(null);
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        System.out.println("Getting Painted");
+        super.paintComponent(g);
         if (frameIndex >= frameMax) {
             frameIndex = 0;
         }
         URL frame = getFrame();
         try {
             BufferedImage entity = ImageIO.read(frame);
-            g.drawImage((Image) entity, 96, 96, this);
+            Image e = (Image) entity;
+            g.drawImage(e, 0, 0, this);
         } catch (IOException e) {
             e.printStackTrace();
         }

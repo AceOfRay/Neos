@@ -26,6 +26,7 @@ public class Chunk extends JLayeredPane {
         this.blockHeight = 64;
         this.makeBackground();
         this.createPoints();
+        this.setPreferredSize(new Dimension(Game.width, Game.height));
     }
 
     public void placeChunk(int pxLoc, int pyLoc) {
@@ -36,9 +37,12 @@ public class Chunk extends JLayeredPane {
     public void placeEntity(Entity e) {
         LavenderTree lt = (LavenderTree) e;
         Point pxRelativeToChunk = determinePXLocation(lt.getGamePosition());
-        lt.setBounds(pxRelativeToChunk.x, pxRelativeToChunk.y, 96, 96);
+        lt.setBounds((int)pxRelativeToChunk.getX(), (int) pxRelativeToChunk.getY(), 96, 96);
+        lt.setPXLocation(pxRelativeToChunk);
+        JPanel ltPanel = (JPanel) lt;
 
-        this.add(lt, JLayeredPane.PALETTE_LAYER);
+        this.add(ltPanel, JLayeredPane.PALETTE_LAYER);
+        System.out.println("added" + lt);
     }
 
     public Point determinePXLocation(Point p) {

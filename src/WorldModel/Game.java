@@ -5,7 +5,6 @@ import javax.swing.*;
 import Entities.Entity;
 import Entities.LavenderTree;
 import Entities.Player;
-import Entities.Tree;
 import Tools.Direction;
 import Tools.EntityLoader;
 

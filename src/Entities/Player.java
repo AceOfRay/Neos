@@ -30,6 +30,7 @@ public class Player extends JPanel implements Entity {
 
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         if (frameIndex >= frameMax) {
             frameIndex = 0;
         }
