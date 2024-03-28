@@ -143,15 +143,26 @@ public class TestImmediateWorld {
         cwp.placeChunk(0, 0);
 
         ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
-        LavenderTree t = new LavenderTree(8, 8, world);
+        LavenderTree t = new LavenderTree(new Point(8, 8), world);
         world.placeEntity(t);
         for (Component c : cwp.getComponents()) {
             if (c instanceof LavenderTree) {
                 System.out.println(c);
             }
         }
-        assertEquals(new Point(8 * 64, 8 * 64), t.getLocation());
+        assertEquals(new Point(8 * 64, 8 * 64 - 32), t.getLocation());
         assertEquals(481, cwp.getComponentCount());
+    }
+    
+    @Test
+    public void testEntityCollision() {
+        List<Chunk> simulatedChunks = List.of(
+                new Chunk(0, 0), new Chunk(30, 0), new Chunk(60, 0));
+        Chunk cwp = simulatedChunks.get(0);
+        cwp.setContainsPlayer();
+        cwp.placeChunk(0, 0);
+
+        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
     }
 
 }

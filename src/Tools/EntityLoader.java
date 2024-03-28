@@ -1,11 +1,12 @@
 package Tools;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import Entities.Entity;
+import Entities.Cow;
 import Entities.LavenderTree;
 import Entities.Player;
 import WorldModel.ImmediateWorld;
@@ -43,22 +44,35 @@ public class EntityLoader {
             System.out.println("An error occurred while loading chunks from file: " + e.getMessage());
         }
     }
-    
+
     private void loadEntitiesFromInputStream(InputStream inputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.startsWith("#")) {
                     String[] pieces = line.split(" ");
-                    if (line.startsWith("p")) {                        
-                        // check if we should include the entity if based on their location relative to centerChunk in world
-                        this.character = new Player(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]), world);
-                        world.addEntity(character);
-                        world.setCharacter(character);
-                    } else if (line.startsWith("lt")) {
-                        LavenderTree tree = new LavenderTree(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]), world);
-                        world.placeEntity(tree);
-                        world.addEntity(tree);
+                    switch (pieces[0]) {
+                        case "p": {
+                            this.character = new Player(
+                                    new Point(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2])), 0, 0, world);
+                            world.addEntity(character);
+                            world.setCharacter(character);
+                            break;
+                        }
+                        case "lt": {
+                            LavenderTree tree = new LavenderTree(
+                                    new Point(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2])), world);
+                            world.placeEntity(tree);
+                            world.addEntity(tree);
+                        }
+                        case "cow": {
+                            Cow cow = new Cow(new Point(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2])),
+                                    world);
+                            world.placeEntity(cow);
+                            world.addEntity(cow);
+                        }
+                        default:
+                            break;
                     }
                 }
             }

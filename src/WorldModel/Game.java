@@ -2,9 +2,9 @@ package WorldModel;
 
 import javax.swing.*;
 
-import Entities.Entity;
 import Entities.LavenderTree;
 import Entities.Player;
+import Entities.AbstractClasses.Entity;
 import Tools.Direction;
 import Tools.EntityLoader;
 
@@ -34,6 +34,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
             }
             checkMove();
             updatePlayer();
+            updateEntities();
             frameTime++;
             
         }
@@ -62,6 +63,14 @@ public class Game extends JFrame implements KeyListener, MouseListener {
         } else if (player.isWalking && frameTime >= 10) {
             frameTime = 0;
             this.player.updateFrame();
+        }
+    }
+
+    public void updateEntities() {
+        for (Entity e : this.immediateWorld.getEntities()) {
+            if (!(e instanceof Player)) {
+                e.updateFrame();
+            }
         }
     }
 

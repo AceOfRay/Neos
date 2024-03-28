@@ -7,9 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JPanel;
 
-import Entities.Entity;
 import Entities.LavenderTree;
 import Entities.Player;
+import Entities.AbstractClasses.Entity;
 
 public class ImmediateWorld extends JPanel {
     private ChunkLoader loader = new ChunkLoader();
@@ -33,7 +33,7 @@ public class ImmediateWorld extends JPanel {
     public boolean checkPlayerMigration() {
         if (character != null) {
             for (Chunk curChunk : getImmediateWorld()) {
-                Chunk newChunkWithPlayer = curChunk.containsPlayer(character.getGamePosition());
+                Chunk newChunkWithPlayer = curChunk.containsPlayer(character.getWorldPosition());
                 if (newChunkWithPlayer != null && !chunkWithPlayer.equals(newChunkWithPlayer)) {
                     updateChunkWithPlayer(newChunkWithPlayer);
                     return true;
@@ -44,18 +44,16 @@ public class ImmediateWorld extends JPanel {
     }
 
     public void placeEntity(Entity e) {
-        LavenderTree t = (LavenderTree) e;
-        Chunk c = findChunk(t);
+        Chunk c = findChunk(e);
         if (c != null) {
-            c.placeEntity(t);
+            c.placeEntity(e);
         }
-        
+
     }
-    
+
     public Chunk findChunk(Entity e) {
         for (Chunk c : this.immediateWorld) {
-            LavenderTree t = (LavenderTree) e;
-            if (c.pointWithinBounds(t.getGamePosition())) {
+            if (c.pointWithinBounds(e.getWorldPosition())) {
                 return c;
             }
         }
@@ -82,7 +80,6 @@ public class ImmediateWorld extends JPanel {
             return true;
         }
         return false;
-
     }
 
     public void moveCharacter(double dx, double dy) {
@@ -95,7 +92,8 @@ public class ImmediateWorld extends JPanel {
         } else if (playerMoveCountX <= -1) {
             character.moveX(-1);
             playerMoveCountX = 0;
-        } else if (playerMoveCountY >= 1) {
+        }
+        if (playerMoveCountY >= 1) {
             character.moveY(1);
             playerMoveCountY = 0;
         } else if (playerMoveCountY <= -1) {
@@ -105,10 +103,20 @@ public class ImmediateWorld extends JPanel {
         checkPlayerMigration();
     }
 
+
+    public boolean pointOccupied(Point p) {
+        for (Entity e : entities) {
+            if (e.getWorldPosition().equals(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean pxWithinBounds(Point pxLoc) {
         double x = pxLoc.getX();
         double y = pxLoc.getY();
-        if (x > 896 || x < -8640 || y > 448 || y < -4608) {
+        if (x > 960 || x < -8576 || y > 512 || y < -4544) {
             return false;
         }
         return true;

@@ -1,102 +1,61 @@
 package Entities;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
-
+import Entities.AbstractClasses.Living;
 import Tools.Direction;
-import WorldModel.Game;
 import WorldModel.ImmediateWorld;
 
-public class Player extends JPanel implements Entity {
-    private Point gamePosition;
-    private ImmediateWorld world;
-    private int frameIndex = 0;
-    private int frameMax = 2;
-    public Direction facingDirection = Direction.Down;
-    public boolean isWalking;
+public class Player extends Living {
 
-    public Player(double x, double y, ImmediateWorld world) {
-        setBounds(-64, -64, 1920, 1080);
+    public Player(Point p, int health, int hunger, ImmediateWorld world) {
+        super(p, health, hunger, world);
+        setBounds(0, 0, 1920, 1080);
         setOpaque(false);
-        this.gamePosition = new Point((int) x, (int) y);
-        this.world = world;
+        this.worldPos = p;
 
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (frameIndex >= frameMax) {
-            frameIndex = 0;
-        }
-        URL frame = getFrame();
-        try {
-            BufferedImage dude = ImageIO.read(frame);
-            g.drawImage((Image) dude, Game.width / 2, Game.height / 2, this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public Point getGamePosition() {
-        return this.gamePosition;
     }
 
     public void moveX(double x) {
-        double newX = getGamePosition().getX() + (x > 0 ? 1 : -1);
-        Point nextPos = new Point((int) newX, (int) getGamePosition().getY());
-        this.gamePosition = nextPos;
+        double newX = getWorldPosition().getX() + (x > 0 ? 1 : -1);
+        Point nextPos = new Point((int) newX, (int) getWorldPosition().getY());
+        if (!world.pointOccupied(nextPos)) {
+            this.worldPos = nextPos;
+        }
+        
     }
 
     public void moveY(double y) {
-        double newY = getGamePosition().getY() + (y > 0 ? -1 : 1);
-        Point nextPos = new Point((int) getGamePosition().getX(), (int) newY);
-        this.gamePosition = nextPos;
-
+        double newY = getWorldPosition().getY() + (y > 0 ? -1 : 1);
+        Point nextPos = new Point((int) getWorldPosition().getX(), (int) newY);
+        if (!world.pointOccupied(nextPos)) {
+            this.worldPos = nextPos;
+        }
     }
 
-    public void setImmediateWorld(ImmediateWorld world) {
-        this.world = world;
-    }
-
-    public void updateFrame() {
-        this.frameIndex++;
-    }
-
-    public URL getFrame() {
+    public String getFrame() {
         boolean facingUp = facingDirection.equals(Direction.Up);
         boolean facingDown = facingDirection.equals(Direction.Down);
         boolean facingRight = facingDirection.equals(Direction.Right);
         boolean facingLeft = facingDirection.equals(Direction.Left);
 
         if (facingUp && isWalking) { // or is sprinting
-            return getClass().getResource("/GameResources/Images/CharacterImages/RayUpMoving" + frameIndex + ".png");
+            return "/GameResources/Images/CharacterImages/RayUpMoving";
         } else if (facingDown && isWalking) { // or is sprinting
-            return getClass().getResource("/GameResources/Images/CharacterImages/RayDownMoving" + frameIndex + ".png");
+            return "/GameResources/Images/CharacterImages/RayDownMoving";
         } else if (facingRight && isWalking) { // or is sprinting
-            return getClass().getResource("/GameResources/Images/CharacterImages/RayRightMoving" + frameIndex + ".png");
+            return "/GameResources/Images/CharacterImages/RayRightMoving";
         } else if (facingLeft && isWalking) { // or isSprinting
-            return getClass().getResource("/GameResources/Images/CharacterImages/RayLeftMoving" + frameIndex + ".png");
+            return "/GameResources/Images/CharacterImages/RayLeftMoving";
         } else if (facingUp) {
-            return getClass().getResource("/GameResources/Images/CharacterImages/RayUpStill" + frameIndex + ".png");
+            return "/GameResources/Images/CharacterImages/RayUpStill";
         } else if (facingDown) {
-            return getClass()
-                    .getResource("/GameResources/Images/CharacterImages/RayDownStill" + frameIndex + ".png");
+            return "/GameResources/Images/CharacterImages/RayDownStill";
         } else if (facingRight) {
-            return getClass()
-                    .getResource("/GameResources/Images/CharacterImages/RayRightStill" + frameIndex + ".png");
+            return "/GameResources/Images/CharacterImages/RayRightStill";
         } else if (facingLeft) {
-            return getClass()
-                    .getResource("/GameResources/Images/CharacterImages/RayLeftStill" + frameIndex + ".png");
+            return "/GameResources/Images/CharacterImages/RayLeftStill";
         } else {
-            return getClass()
-                    .getResource("/GameResources/Images/CharacterImages/RayDownStill" + frameIndex + ".png");
+            return "/GameResources/Images/CharacterImages/RayDownStill";
         }
     }
 }
