@@ -18,7 +18,7 @@ import WorldModel.ImmediateWorld;
 public abstract class Entity extends JPanel {
     private Point pxLocation;
     protected ImmediateWorld world;
-    public Direction facingDirection = Direction.Down;
+    public Direction facingDirection = Direction.Left;
     public boolean isWalking;
     protected Point worldPos;
     private int frameIndex;

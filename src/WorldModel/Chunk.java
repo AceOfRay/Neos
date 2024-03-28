@@ -1,8 +1,7 @@
 package WorldModel;
 
 import javax.swing.*;
-
-import Entities.LavenderTree;
+import Entities.Tree;
 import Entities.AbstractClasses.Entity;
 
 import java.awt.*;
@@ -35,8 +34,14 @@ public class Chunk extends JLayeredPane {
     }
 
     public void placeEntity(Entity e) {
+        int wh = 64;
+        int diff = 0;
+        if (e instanceof Tree) {
+            wh = 96;
+            diff = 32;
+        }
         Point pxRelativeToChunk = determinePXLocation(e.getWorldPosition());
-        e.setBounds((int) pxRelativeToChunk.getX(), (int) pxRelativeToChunk.getY() - 32, 96, 96);
+        e.setBounds((int) pxRelativeToChunk.getX(), (int) pxRelativeToChunk.getY() - diff, wh, wh);
         e.setPXLocation(pxRelativeToChunk);
         this.add(e, (int) (100 - e.getWorldPosition().getY()));
     }

@@ -64,12 +64,14 @@ public class EntityLoader {
                                     new Point(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2])), world);
                             world.placeEntity(tree);
                             world.addEntity(tree);
+                            break;
                         }
                         case "cow": {
                             Cow cow = new Cow(new Point(Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2])),
                                     world);
                             world.placeEntity(cow);
                             world.addEntity(cow);
+                            break;
                         }
                         default:
                             break;
