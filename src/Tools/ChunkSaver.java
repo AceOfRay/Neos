@@ -9,12 +9,12 @@ import java.io.IOException;
 import java.util.List;
 
 import WorldModel.Chunk;
-import WorldModel.ImmediateWorld;
+import WorldModel.World;
 
 public class ChunkSaver {
     private final String filePath = "src/GameResources/Files/world.txt";
 
-    public ChunkSaver(List<String> indexes, ImmediateWorld world) {
+    public ChunkSaver(List<String> indexes, World world) {
         Chunk hasPlayer = world.getChunkWithPlayer();
         String centerPoint = hasPlayer.getChunkIndex().getX() + ", " + hasPlayer.getChunkIndex().getY();
         try {

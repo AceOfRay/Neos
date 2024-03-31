@@ -3,11 +3,11 @@ package Entities;
 import java.awt.*;
 import Entities.AbstractClasses.Living;
 import Tools.Direction;
-import WorldModel.ImmediateWorld;
+import WorldModel.World;
 
 public class Player extends Living {
 
-    public Player(Point p, int health, int hunger, ImmediateWorld world) {
+    public Player(Point p, int health, int hunger, World world) {
         super(p, health, hunger, world);
         setBounds(0, 0, 1920, 1080);
         setOpaque(false);
@@ -15,11 +15,10 @@ public class Player extends Living {
 
     }
 
-    public void updatePosition() {
-        Point wl = world.getWorldLocation();
-        int newX = -wl.x / 64 + 15;
-        int newY = -wl.y / 64 + 8;
-        this.worldPos = new Point(newX, newY);
+
+    public void updatePosition(Point np) {
+        this.worldPos = np;
+        //System.out.println(np);
     } 
 
     public String getFrame() {

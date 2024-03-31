@@ -13,18 +13,18 @@ import Entities.Player;
 import Entities.Tree;
 import Tools.Direction;
 import WorldModel.Game;
-import WorldModel.ImmediateWorld;
+import WorldModel.World;
 
 public abstract class Entity extends JPanel {
     private Point pxLocation;
-    protected ImmediateWorld world;
+    protected World world;
     public Direction facingDirection = Direction.Left;
     public boolean isWalking;
     protected Point worldPos;
     private int frameIndex;
     private static final int frameMax = 2;
 
-    public Entity(Point pos, ImmediateWorld world) {
+    public Entity(Point pos, World world) {
         this.frameIndex = 0;
         this.worldPos = pos;
         this.world = world;
@@ -66,7 +66,7 @@ public abstract class Entity extends JPanel {
         return this.worldPos;
     }
 
-    public void setImmediateWorld(ImmediateWorld world) {
+    public void setImmediateWorld(World world) {
         this.world = world;
     }
 

@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import Entities.Player;
 import Entities.AbstractClasses.Entity;
 
-public class ImmediateWorld extends JPanel {
+public class World extends JPanel {
     private ChunkLoader loader = new ChunkLoader();
     private List<Chunk> immediateWorld;
     private Chunk chunkWithPlayer;
@@ -17,10 +17,10 @@ public class ImmediateWorld extends JPanel {
     private List<Entity> entities = new LinkedList<>();
     private Point worldLocation;
 
-    public ImmediateWorld() {
+    public World() {
         this.immediateWorld = loader.getChunks();
         this.setLayout(null);
-        this.setBounds(0, 0, Game.width * 5, Game.height * 5);
+        this.setBounds(0, 0, Game.width * 5, Game.height * 5); // need to modify so that it doesn't spawn here
         putChunksInWorld();
         setChunkWithPlayer();
         setWorldLocation();
@@ -63,30 +63,32 @@ public class ImmediateWorld extends JPanel {
     }
 
     public void moveGame(int dx, int dy) {
-        if (moveWorld(dx, dy)) {
-            moveCharacter();
+        Point newPos = new Point((int) this.worldLocation.getX() + dx, (int) this.worldLocation.getY() + dy);
+        Point newPlayerCoord = createNewPlayerCoord(newPos);
+        if (pxWithinBounds(newPos) && !pointOccupied(newPlayerCoord)) {
+            moveWorld(newPos);
+            moveCharacter(newPlayerCoord);
         }
     }
 
-    public boolean moveWorld(int x, int y) {
-        Point newPos = new Point((int) this.worldLocation.getX() + x, (int) this.worldLocation.getY() + y);
-        if (pxWithinBounds(newPos)) {
-            this.setLocation(newPos);
-            this.worldLocation = newPos;
-            return true;
-        }
-        return false;
+    public Point createNewPlayerCoord(Point pxPos) {
+        return new Point((-pxPos.x / 64 + 15), (-pxPos.y / 64 + 8)); // check the + 15 and + 8 in the next test phase
     }
 
-    public void moveCharacter() {
-        character.updatePosition();
+    public void moveWorld(Point np) {
+        this.setLocation(np);
+        this.worldLocation = np;
+
+    }
+
+    public void moveCharacter(Point np) {
+        character.updatePosition(np);
         checkPlayerMigration();
     }
 
-
     public boolean pointOccupied(Point p) {
         for (Entity e : entities) {
-            if (e.getWorldPosition().equals(p)) {
+            if (e.getWorldPosition().equals(p) && !(e instanceof Player)) {
                 return true;
             }
         }
@@ -102,8 +104,61 @@ public class ImmediateWorld extends JPanel {
         return true;
     }
 
+    public Chunk findChunkWithPlayer() {
+        for (Chunk curChunk : getImmediateWorld()) {
+            if (curChunk.getContainsPlayer()) {
+                return curChunk;
+            }
+        }
+        return null;
+    }
+
+    public boolean contains(Chunk chunk) {
+        for (Chunk curChunk : immediateWorld) {
+            if (curChunk.equals(chunk)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setCamera() {
+        Point cP = character.getWorldPosition();
+        this.worldLocation = new Point(-((cP.x - 15) * 64), -((cP.y - 8) * 64));
+        setLocation(this.worldLocation.x, this.worldLocation.y);
+    }
+
+    public void putChunksInWorld() {
+        for (Component chunk : this.immediateWorld) {
+            this.add(chunk);
+        }
+    }
+
+    public void setWorldLocation() {
+        Point cwp = this.chunkWithPlayer.getChunkPixelLocation();
+        this.worldLocation = new Point(-cwp.x, -cwp.y);
+        this.setLocation(worldLocation);
+    }
+
+    public World(List<Chunk> chunks, Chunk cwp) { // test constructor
+        this.immediateWorld = chunks;
+        this.setLayout(null);
+        this.setBounds(0, 0, Game.width * 5, Game.height * 5);
+        putChunksInWorld();
+        setChunkWithPlayer();
+        setWorldLocation();
+    }
+
     public List<Entity> getEntities() {
         return this.entities;
+    }
+
+    public Chunk getChunk(int index) {
+        return this.immediateWorld.get(index);
+    }
+
+    public void setChunkWithPlayer() {
+        this.chunkWithPlayer = findChunkWithPlayer();
     }
 
     public void setCharacter(Player character) {
@@ -128,52 +183,5 @@ public class ImmediateWorld extends JPanel {
 
     public Point getWorldLocation() {
         return this.worldLocation;
-    }
-
-    public Chunk findChunkWithPlayer() {
-        for (Chunk curChunk : getImmediateWorld()) {
-            if (curChunk.getContainsPlayer()) {
-                return curChunk;
-            }
-        }
-        return null;
-    }
-
-    public Chunk getChunk(int index) {
-        return this.immediateWorld.get(index);
-    }
-
-    public void setChunkWithPlayer() {
-        this.chunkWithPlayer = findChunkWithPlayer();
-    }
-
-    public boolean contains(Chunk chunk) {
-        for (Chunk curChunk : immediateWorld) {
-            if (curChunk.equals(chunk)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void putChunksInWorld() {
-        for (Component chunk : this.immediateWorld) {
-            this.add(chunk);
-        }
-    }
-
-    public void setWorldLocation() {
-        Point cwp = this.chunkWithPlayer.getChunkPixelLocation();
-        this.worldLocation = new Point((int) -cwp.getX(), (int) -cwp.getY());
-        this.setLocation(worldLocation);
-    }
-
-    public ImmediateWorld(List<Chunk> chunks, Chunk cwp) { // test constructor
-        this.immediateWorld = chunks;
-        this.setLayout(null);
-        this.setBounds(0, 0, Game.width * 5, Game.height * 5);
-        putChunksInWorld();
-        setChunkWithPlayer();
-        setWorldLocation();
     }
 }

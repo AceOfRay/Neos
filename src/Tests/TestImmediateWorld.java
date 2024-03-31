@@ -13,19 +13,19 @@ import org.junit.jupiter.api.Test;
 
 import Entities.LavenderTree;
 import WorldModel.Chunk;
-import WorldModel.ImmediateWorld;
+import WorldModel.World;
 
 public class TestImmediateWorld {
     @Test
     public void testChunkPixelLocations1() {
-        ImmediateWorld world = new ImmediateWorld();
+        World world = new World();
         List<Chunk> chunks = world.getImmediateWorld();
         assertEquals(new Point(1920, 1024), chunks.get(6).getChunkPixelLocation());
     }
 
     @Test
     public void testImmediateWorldSize() {
-        ImmediateWorld world = new ImmediateWorld();
+        World world = new World();
         List<Chunk> chunks = world.getImmediateWorld();
         assertEquals(25, chunks.size());
     }
@@ -45,7 +45,7 @@ public class TestImmediateWorld {
 
         Chunk cwp = simulatedChunks.get(1);
         cwp.setContainsPlayer();
-        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+        World world = new World(simulatedChunks, cwp);
 
         hcnt = 0;
         vcnt = 0;
@@ -61,7 +61,7 @@ public class TestImmediateWorld {
     public void testWorldChunksPxPlacement_Actual() {
         int hcnt = 0;
         int vcnt = 0;
-        ImmediateWorld world = new ImmediateWorld();
+        World world = new World();
         List<Chunk> chunks = world.getImmediateWorld();
         for (Chunk c : chunks) {
             if (vcnt > 4096) {
@@ -78,7 +78,7 @@ public class TestImmediateWorld {
 
     @Test
     public void testWorldChunkIndexes() {
-        ImmediateWorld world = new ImmediateWorld();
+        World world = new World();
         List<Chunk> chunks = world.getImmediateWorld();
         int hcnt = 0;
         int vcnt = 0;
@@ -101,7 +101,7 @@ public class TestImmediateWorld {
                 new Chunk(0, 0), new Chunk(30, 0), new Chunk(60, 0));
         Chunk cwp = simulatedChunks.get(1);
         cwp.setContainsPlayer();
-        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+        World world = new World(simulatedChunks, cwp);
         assertEquals(cwp, world.getChunkWithPlayer());
     }
 
@@ -117,7 +117,7 @@ public class TestImmediateWorld {
         Chunk cwp = simulatedChunks.get(1);
         cwp.setContainsPlayer();
         cwp.placeChunk(1920, 0);
-        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+        World world = new World(simulatedChunks, cwp);
         assertEquals(new Point(-1920, 0), world.getLocation());
         assertNotEquals(new Point(0, 0), world.getLocation());
     }
@@ -129,7 +129,7 @@ public class TestImmediateWorld {
         Chunk cwp = simulatedChunks.get(2);
         cwp.setContainsPlayer();
         cwp.placeChunk(3840, 0);
-        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+        World world = new World(simulatedChunks, cwp);
         assertEquals(new Point(-3840, 0), world.getLocation());
         assertNotEquals(new Point(0, 0), world.getLocation());
     }
@@ -142,7 +142,7 @@ public class TestImmediateWorld {
         cwp.setContainsPlayer();
         cwp.placeChunk(0, 0);
 
-        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+        World world = new World(simulatedChunks, cwp);
         LavenderTree t = new LavenderTree(new Point(8, 8), world);
         world.placeEntity(t);
         for (Component c : cwp.getComponents()) {
@@ -162,7 +162,7 @@ public class TestImmediateWorld {
         cwp.setContainsPlayer();
         cwp.placeChunk(0, 0);
 
-        ImmediateWorld world = new ImmediateWorld(simulatedChunks, cwp);
+        World world = new World(simulatedChunks, cwp);
     }
 
 }

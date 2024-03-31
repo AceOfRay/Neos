@@ -2,13 +2,13 @@ package Entities.AbstractClasses;
 
 import java.awt.Point;
 
-import WorldModel.ImmediateWorld;
+import WorldModel.World;
 
 public abstract class Living extends Entity {
     protected int health;
     protected int hunger;
 
-    public Living(Point pos, int health, int hunger, ImmediateWorld world) {
+    public Living(Point pos, int health, int hunger, World world) {
         super(pos, world);
         this.health = health;
         this.hunger = hunger;

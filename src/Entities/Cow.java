@@ -5,11 +5,11 @@ import java.awt.Point;
 import Entities.AbstractClasses.Entity;
 import Entities.Interfaces.Animal;
 import Tools.Direction;
-import WorldModel.ImmediateWorld;
+import WorldModel.World;
 
 public class Cow extends Entity implements Animal {
     
-    public Cow(Point pos, ImmediateWorld world) {
+    public Cow(Point pos, World world) {
         super(pos, world);
     }
 

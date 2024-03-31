@@ -4,11 +4,11 @@ import java.awt.Point;
 
 import Entities.AbstractClasses.Entity;
 import Entities.Interfaces.Animal;
-import WorldModel.ImmediateWorld;
+import WorldModel.World;
 
 public class Zombie extends Entity implements Animal {
 
-    public Zombie(Point pos, ImmediateWorld world) {
+    public Zombie(Point pos, World world) {
         super(pos, world);
         //TODO Auto-generated constructor stub
     }

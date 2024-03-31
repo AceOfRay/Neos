@@ -9,13 +9,13 @@ import java.io.InputStreamReader;
 import Entities.Cow;
 import Entities.LavenderTree;
 import Entities.Player;
-import WorldModel.ImmediateWorld;
+import WorldModel.World;
 
 public class EntityLoader {
-    private ImmediateWorld world;
+    private World world;
     private Player character;
 
-    public EntityLoader(ImmediateWorld world) {
+    public EntityLoader(World world) {
         this.world = world;
         try {
             InputStream inputStream = getClass().getClassLoader()
@@ -30,7 +30,7 @@ public class EntityLoader {
         }
     }
 
-    public EntityLoader(ImmediateWorld world, String filepath) {
+    public EntityLoader(World world, String filepath) {
         this.world = world;
         try {
             InputStream inputStream = getClass().getClassLoader()

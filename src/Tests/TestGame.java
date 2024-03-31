@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Test;
 
 import Entities.Player;
 import WorldModel.Game;
-import WorldModel.ImmediateWorld;
+import WorldModel.World;
 
 public class TestGame {
 
     @Test // right
     public void testPlayerCoordinateChange1() {
         Game g = new Game(3);
-        ImmediateWorld world = g.getImmediateWorld();
+        World world = g.getWorld();
         int c = 4;
         while (c > 0) {
 
@@ -30,7 +30,7 @@ public class TestGame {
     @Test // up
     public void testPlayerCoordinateChange2() {
         Game g = new Game(3);
-        ImmediateWorld world = g.getImmediateWorld();
+        World world = g.getWorld();
         int c = 4;
         while (c > 0) {
             world.moveGame(0, 16);
@@ -43,7 +43,7 @@ public class TestGame {
     @Test // down
     public void testPlayerCoordinateChange3() {
         Game g = new Game(3);
-        ImmediateWorld world = g.getImmediateWorld();
+        World world = g.getWorld();
         int c = 4;
         while (c > 0) {
             world.moveGame(0, -16);
@@ -56,7 +56,7 @@ public class TestGame {
     @Test // left
     public void testPlayerCoordinateChange4() {
         Game g = new Game(3);
-        ImmediateWorld world = g.getImmediateWorld();
+        World world = g.getWorld();
         int c = 4;
         while (c > 0) {
             world.moveGame(16, 0);
@@ -69,7 +69,7 @@ public class TestGame {
     @Test // up and left
     public void testPlayerCoordinateChange5() {
         Game g = new Game(5);
-        ImmediateWorld world = g.getImmediateWorld();
+        World world = g.getWorld();
         Player player = world.getCharacter();
         int c = 32;
         while (c > 0) {
@@ -87,7 +87,7 @@ public class TestGame {
     @Test // up and left
     public void testPlayerCollision() {
         Game g = new Game(5);
-        ImmediateWorld world = g.getImmediateWorld();
+        World world = g.getWorld();
         Player player = world.getCharacter();
         int c0 = 12;
         while (c0 > 0) {

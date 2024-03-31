@@ -136,4 +136,16 @@ public class Chunk extends JLayeredPane {
     public Point getChunkPixelLocation() {
         return this.chunkPixelLocation;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Chunk)) {
+            return false;
+        }
+        Chunk other = (Chunk) obj;
+        return getChunkIndex().equals(other.getChunkIndex());
+    }
 }

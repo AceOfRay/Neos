@@ -2,11 +2,11 @@ package Entities;
 
 import java.awt.Point;
 import Entities.AbstractClasses.Entity;
-import WorldModel.ImmediateWorld;
+import WorldModel.World;
 
 public class LavenderTree extends Entity implements Tree {
 
-    public LavenderTree(Point p, ImmediateWorld world) {
+    public LavenderTree(Point p, World world) {
         super(p, world);
         setBounds(0, 0, 96, 96);
     }

@@ -20,12 +20,13 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     private JLayeredPane pane;
     private boolean isActive;
     private HashSet<Direction> directionSet = new HashSet<>();
-    private ImmediateWorld immediateWorld;
+    private World world;
     private Player player;
     private int frameTime = 0;
 
     public Game() {
         initializeGame();
+        world.setCamera();
         while (isActive) {
             try {
                 Thread.sleep(20);
@@ -67,7 +68,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     }
 
     public void updateEntities() {
-        for (Entity e : this.immediateWorld.getEntities()) {
+        for (Entity e : this.world.getEntities()) {
             if (!(e instanceof Player)) {
                 e.updateFrame();
             }
@@ -75,16 +76,16 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     }
 
     public void setEntities() {
-        new EntityLoader(immediateWorld);
-        this.worldEntities = immediateWorld.getEntities();
-        this.player = immediateWorld.getCharacter();
+        new EntityLoader(world);
+        this.worldEntities = world.getEntities();
+        this.player = world.getCharacter();
         for (Entity e : worldEntities) {
             if (e instanceof Player) {
                 Player p = (Player) e;
                 this.pane.add(p, JLayeredPane.PALETTE_LAYER);
             } else if (e instanceof LavenderTree) {
                 LavenderTree lt = (LavenderTree) e;
-                this.immediateWorld.placeEntity(lt);
+                this.world.placeEntity(lt);
             }
         }
     }
@@ -118,11 +119,10 @@ public class Game extends JFrame implements KeyListener, MouseListener {
                 dx -= 16;
             }
 
-            this.immediateWorld.moveGame(dx, dy);
+            this.world.moveGame(dx, dy);
         } else {
             player.isWalking = false;
         }
-        player.repaint();
         this.repaint();
 
     }
@@ -131,14 +131,14 @@ public class Game extends JFrame implements KeyListener, MouseListener {
         this.pane = new JLayeredPane();
         this.pane.setOpaque(true);
         this.pane.setBackground(Color.black);
-        this.setImmediateWorld();
+        this.setworld();
         this.setEntities();
         this.add(pane);
     }
 
-    public void setImmediateWorld() {
-        this.immediateWorld = new ImmediateWorld();
-        this.pane.add(this.immediateWorld, JLayeredPane.DEFAULT_LAYER);
+    public void setworld() {
+        this.world = new World();
+        this.pane.add(this.world, JLayeredPane.DEFAULT_LAYER);
     }
 
     @Override
@@ -246,7 +246,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
     public void mouseExited(MouseEvent e) {
     }
 
-    public ImmediateWorld getImmediateWorld() {
-        return this.immediateWorld;
+    public World getWorld() {
+        return this.world;
     }
 }
