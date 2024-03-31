@@ -8,11 +8,11 @@ public class LavenderTree extends Entity implements Tree {
 
     public LavenderTree(Point p, World world) {
         super(p, world);
-        setBounds(0, 0, 96, 96);
+        setBounds(16, 0, 96, 96);
     }
 
     public String getFrame() {
-        return "/GameResources/Images/Trees/LavenderTree";
+        return "/GameResources/Images/Trees/Lavender";
     }
 
 

@@ -16,7 +16,7 @@ public class TestGame {
     public void testPlayerCoordinateChange1() {
         Game g = new Game(3);
         World world = g.getWorld();
-        int c = 4;
+        int c = 8;
         while (c > 0) {
 
             world.moveGame(-16, 0);
@@ -31,7 +31,7 @@ public class TestGame {
     public void testPlayerCoordinateChange2() {
         Game g = new Game(3);
         World world = g.getWorld();
-        int c = 4;
+        int c = 8;
         while (c > 0) {
             world.moveGame(0, 16);
             c--;
@@ -44,7 +44,7 @@ public class TestGame {
     public void testPlayerCoordinateChange3() {
         Game g = new Game(3);
         World world = g.getWorld();
-        int c = 4;
+        int c = 8;
         while (c > 0) {
             world.moveGame(0, -16);
             c--;
@@ -57,7 +57,7 @@ public class TestGame {
     public void testPlayerCoordinateChange4() {
         Game g = new Game(3);
         World world = g.getWorld();
-        int c = 4;
+        int c = 8;
         while (c > 0) {
             world.moveGame(16, 0);
             c--;

@@ -9,7 +9,7 @@ public class Player extends Living {
 
     public Player(Point p, int health, int hunger, World world) {
         super(p, health, hunger, world);
-        setBounds(0, 0, 1920, 1080);
+        setBounds(-64, -64, 1920, 1080);
         setOpaque(false);
         this.worldPos = p;
 
@@ -18,7 +18,7 @@ public class Player extends Living {
 
     public void updatePosition(Point np) {
         this.worldPos = np;
-        //System.out.println(np);
+        System.out.println(np);
     } 
 
     public String getFrame() {

@@ -20,7 +20,7 @@ public class World extends JPanel {
     public World() {
         this.immediateWorld = loader.getChunks();
         this.setLayout(null);
-        this.setBounds(0, 0, Game.width * 5, Game.height * 5); // need to modify so that it doesn't spawn here
+        this.setBounds(0, 0, Game.width * 10, Game.height * 10);
         putChunksInWorld();
         setChunkWithPlayer();
         setWorldLocation();
@@ -72,7 +72,7 @@ public class World extends JPanel {
     }
 
     public Point createNewPlayerCoord(Point pxPos) {
-        return new Point((-pxPos.x / 64 + 15), (-pxPos.y / 64 + 8)); // check the + 15 and + 8 in the next test phase
+        return new Point((-pxPos.x / 128 + 7), (-pxPos.y / 128 + 4)); // check the + 15 and + 8 in the next test phase
     }
 
     public void moveWorld(Point np) {
@@ -95,10 +95,10 @@ public class World extends JPanel {
         return false;
     }
 
-    public boolean pxWithinBounds(Point pxLoc) {
+    public boolean pxWithinBounds(Point pxLoc) {  // comeback and fix
         double x = pxLoc.getX();
         double y = pxLoc.getY();
-        if (x > 960 || x < -8576 || y > 512 || y < -4544) {
+        if (x > 960 || x < -18176 || y > 512 || y < -9664) {
             return false;
         }
         return true;
@@ -124,7 +124,7 @@ public class World extends JPanel {
 
     public void setCamera() {
         Point cP = character.getWorldPosition();
-        this.worldLocation = new Point(-((cP.x - 15) * 64), -((cP.y - 8) * 64));
+        this.worldLocation = new Point(-((cP.x - 7) * 128), -((cP.y - 4) * 128));
         setLocation(this.worldLocation.x, this.worldLocation.y);
     }
 

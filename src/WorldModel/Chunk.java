@@ -21,23 +21,23 @@ public class Chunk extends JLayeredPane {
 
     public Chunk(int x, int y) {
         this.chunkIndex = new Point(x, y);
-        this.blockWidth = 64;
-        this.blockHeight = 64;
+        this.blockWidth = 128;
+        this.blockHeight = 128;
         this.makeBackground();
         this.createPoints();
-        this.setPreferredSize(new Dimension(Game.width, Game.height));
+        this.setPreferredSize(new Dimension(Game.width * 2, Game.height * 2));
     }
 
     public void placeChunk(int pxLoc, int pyLoc) {
         this.chunkPixelLocation = new Point(pxLoc, pyLoc);
-        this.setBounds((int) chunkPixelLocation.getX(), (int) chunkPixelLocation.getY(), Game.width, Game.height);
+        this.setBounds((int) chunkPixelLocation.getX(), (int) chunkPixelLocation.getY(), Game.width * 2, Game.height * 2);
     }
 
     public void placeEntity(Entity e) {
         int wh = 64;
         int diff = 0;
         if (e instanceof Tree) {
-            wh = 96;
+            wh = 128;
             diff = 32;
         }
         Point pxRelativeToChunk = determinePXLocation(e.getWorldPosition());
@@ -49,9 +49,8 @@ public class Chunk extends JLayeredPane {
     public Point determinePXLocation(Point p) {
         Point idx = getChunkIndex();
         Point relativePosition = new Point((int) (p.getX() - idx.getX()), (int) (p.getY() - idx.getY()));
-        return new Point((int) relativePosition.getX() * 64, (int) relativePosition.getY() * 64);
+        return new Point((int) relativePosition.getX() * 128, (int) relativePosition.getY() * 128); 
     }
-
     public void makeBackground() {
         int numBlocksX = 30; // Game.width / this.blockWidth;
         int numBlocksY = 16; // Game.height / this.blockHeight;
