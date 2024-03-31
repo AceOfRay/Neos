@@ -6,8 +6,6 @@ import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JPanel;
-
-import Entities.LavenderTree;
 import Entities.Player;
 import Entities.AbstractClasses.Entity;
 
@@ -17,8 +15,6 @@ public class ImmediateWorld extends JPanel {
     private Chunk chunkWithPlayer;
     private Player character;
     private List<Entity> entities = new LinkedList<>();
-    private double playerMoveCountX;
-    private double playerMoveCountY;
     private Point worldLocation;
 
     public ImmediateWorld() {
@@ -66,9 +62,9 @@ public class ImmediateWorld extends JPanel {
         newChunk.setContainsPlayer();
     }
 
-    public void move(int dx, int dy, double pdx, double pdy) {
+    public void moveGame(int dx, int dy) {
         if (moveWorld(dx, dy)) {
-            moveCharacter(pdx, pdy);
+            moveCharacter();
         }
     }
 
@@ -82,24 +78,8 @@ public class ImmediateWorld extends JPanel {
         return false;
     }
 
-    public void moveCharacter(double dx, double dy) {
-        playerMoveCountX += dx;
-        playerMoveCountY -= dy;
-
-        if (playerMoveCountX >= 1) {
-            character.moveX(1);
-            playerMoveCountX = 0;
-        } else if (playerMoveCountX <= -1) {
-            character.moveX(-1);
-            playerMoveCountX = 0;
-        }
-        if (playerMoveCountY >= 1) {
-            character.moveY(1);
-            playerMoveCountY = 0;
-        } else if (playerMoveCountY <= -1) {
-            character.moveY(-1);
-            playerMoveCountY = 0;
-        }
+    public void moveCharacter() {
+        character.updatePosition();
         checkPlayerMigration();
     }
 

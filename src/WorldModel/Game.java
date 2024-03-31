@@ -36,7 +36,7 @@ public class Game extends JFrame implements KeyListener, MouseListener {
             updatePlayer();
             updateEntities();
             frameTime++;
-            
+
         }
     }
 
@@ -99,32 +99,26 @@ public class Game extends JFrame implements KeyListener, MouseListener {
 
             int dx = 0;
             int dy = 0;
-            double pdx = 0;
-            double pdy = 0;
 
-            if (up) {
+            if (up) { // looking up world moving down
                 player.facingDirection = Direction.Up;
                 dy += 16;
-                pdy -= .25;
             }
 
-            if (down) {
+            if (down) { // looking down world moving up
                 player.facingDirection = Direction.Down;
                 dy -= 16;
-                pdy += .25;
             }
             if (left) {
                 player.facingDirection = Direction.Left;
                 dx += 16;
-                pdx -= 0.25;
             }
             if (right) {
                 player.facingDirection = Direction.Right;
                 dx -= 16;
-                pdx += .25;
             }
 
-            this.immediateWorld.move(dx, dy, pdx, pdy);
+            this.immediateWorld.moveGame(dx, dy);
         } else {
             player.isWalking = false;
         }

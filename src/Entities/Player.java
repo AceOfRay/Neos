@@ -15,22 +15,12 @@ public class Player extends Living {
 
     }
 
-    public void moveX(double x) {
-        double newX = getWorldPosition().getX() + (x > 0 ? 1 : -1);
-        Point nextPos = new Point((int) newX, (int) getWorldPosition().getY());
-        if (!world.pointOccupied(nextPos)) {
-            this.worldPos = nextPos;
-        }
-        
-    }
-
-    public void moveY(double y) {
-        double newY = getWorldPosition().getY() + (y > 0 ? -1 : 1);
-        Point nextPos = new Point((int) getWorldPosition().getX(), (int) newY);
-        if (!world.pointOccupied(nextPos)) {
-            this.worldPos = nextPos;
-        }
-    }
+    public void updatePosition() {
+        Point wl = world.getWorldLocation();
+        int newX = -wl.x / 64 + 15;
+        int newY = -wl.y / 64 + 8;
+        this.worldPos = new Point(newX, newY);
+    } 
 
     public String getFrame() {
         boolean facingUp = facingDirection.equals(Direction.Up);
