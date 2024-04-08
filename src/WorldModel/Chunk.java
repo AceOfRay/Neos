@@ -41,7 +41,7 @@ public class Chunk extends JLayeredPane {
             diff = 32;
         }
         Point pxRelativeToChunk = determinePXLocation(e.getWorldPosition());
-        e.setBounds((int) pxRelativeToChunk.getX(), (int) pxRelativeToChunk.getY() - diff, wh, wh);
+        e.setBounds((int) pxRelativeToChunk.getX(), (int) pxRelativeToChunk.getY() + diff, wh, wh);
         e.setPXLocation(pxRelativeToChunk);
         this.add(e, (int) (100 - e.getWorldPosition().getY()));
     }

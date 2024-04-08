@@ -65,7 +65,7 @@ public class World extends JPanel {
     public void moveGame(int dx, int dy) {
         Point newPos = new Point((int) this.worldLocation.getX() + dx, (int) this.worldLocation.getY() + dy);
         Point newPlayerCoord = createNewPlayerCoord(newPos);
-        if (pxWithinBounds(newPos) && !pointOccupied(newPlayerCoord)) {
+        if (pxWithinBounds(newPos) && !pointOccupied(newPlayerCoord) ) {
             moveWorld(newPos);
             moveCharacter(newPlayerCoord);
         }
