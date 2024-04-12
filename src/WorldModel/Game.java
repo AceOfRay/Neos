@@ -2,6 +2,7 @@ package WorldModel;
 
 import javax.swing.*;
 
+import Entities.Cow;
 import Entities.LavenderTree;
 import Entities.Player;
 import Entities.AbstractClasses.Entity;
@@ -72,6 +73,10 @@ public class Game extends JFrame implements KeyListener, MouseListener {
             if (!(e instanceof Player)) {
                 e.updateFrame();
             }
+            if (e instanceof Cow) {
+                Cow cow = (Cow) e;
+                cow.executeAction();
+            }
         }
     }
 
@@ -89,6 +94,15 @@ public class Game extends JFrame implements KeyListener, MouseListener {
             }
         }
     }
+
+    // public void executeAllEntityActivity() {
+    //     for (Entity e : this.worldEntities) {
+    //         if (e instanceof Cow) {
+    //             Cow cow = (Cow) e;
+    //             cow.executeAction();
+    //         }
+    //     }
+    // }
 
     public void checkMove() {
         if (directionSet.size() > 0) {

@@ -1,5 +1,5 @@
 # Entities:
-p 0 0
+p 15 8
 lt 18 7
 lt 18 8
 cow 15 12

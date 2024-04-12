@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -22,6 +24,7 @@ public abstract class Entity extends JPanel {
     public boolean isWalking;
     protected Point worldPos;
     private int frameIndex;
+    protected Set<Direction> directionSet = new HashSet<>();
     private static final int frameMax = 2;
 
     public Entity(Point pos, World world) {

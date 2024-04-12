@@ -49,5 +49,11 @@ public class Zombie extends Entity implements Animal {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getFrame'");
     }
+
+    @Override
+    public void findDirection() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findDirection'");
+    }
     
 }
